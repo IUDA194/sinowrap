@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-m8&az+1(!cfpivvkor5ow=avs)itx_hv8fq%o_seg2yc#$qf+5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["185.107.237.179"]
+ALLOWED_HOSTS = ["185.107.237.179", "127.0.0.1"]
 
 
 # Application definition
@@ -79,7 +79,8 @@ DATABASES = {
         'ENGINE': 'djongo',
         'NAME': 'sinowrap',
         'CLIENT': {
-           'host': 'localhost:27017',
+           'host': 'localhost',
+           'port': 27017,
         }
     }
 }
@@ -120,6 +121,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+APPEND_SLASH=False
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

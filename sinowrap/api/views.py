@@ -7,7 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 class Position:
     @csrf_exempt
-    def post(request) -> JsonResponse:
+    def url(request) -> JsonResponse:
+        #POST -> add new position
         if request.method == "POST": 
             request_data = request.POST
             data = {
@@ -46,7 +47,56 @@ class Position:
                                     length = data['length'],
                                     width = data['width']).save()
             return JsonResponse({"status" : True})
-
+        elif request.method == "GET":
+            id = request.GET.get("id")
+            name = request.GET.get("name")
+            if id:
+                value = position.objects.filter(id=id)
+                if len(value) > 0: 
+                    data = {
+                    "name" : value[0].name,
+                    "main_photo_path" : value[0].main_photo_path,
+                    "description" : value[0].description,
+                    "manufacturer" : value[0].manufacturer,
+                    "orign_country" : value[0].orign_country,
+                    "brand" : value[0].brand,
+                    "colors" : value[0].colors,
+                    "colors_photo_path" : value[0].colors_photo_path,
+                    "opt_price" : value[0].opt_price,
+                    "discount_price" : value[0].discount_price,
+                    "unit" : value[0].unit,
+                    "unit_storage" : value[0].unit_storage,
+                    "weight" : value[0].weight,
+                    "volume" : value[0].volume, 
+                    "length" : value[0].length,
+                    "width" : value[0].width
+                    }
+                    return JsonResponse({"status" : True, "data" : data})
+                else: return JsonResponse({"status" : False}, status=403)
+            elif name:
+                value = position.objects.filter(name=name)
+                if len(value) > 0: 
+                    data = {
+                    "name" : value[0].name,
+                    "main_photo_path" : value[0].main_photo_path,
+                    "description" : value[0].description,
+                    "manufacturer" : value[0].manufacturer,
+                    "orign_country" : value[0].orign_country,
+                    "brand" : value[0].brand,
+                    "colors" : value[0].colors,
+                    "colors_photo_path" : value[0].colors_photo_path,
+                    "opt_price" : value[0].opt_price,
+                    "discount_price" : value[0].discount_price,
+                    "unit" : value[0].unit,
+                    "unit_storage" : value[0].unit_storage,
+                    "weight" : value[0].weight,
+                    "volume" : value[0].volume, 
+                    "length" : value[0].length,
+                    "width" : value[0].width
+                    }
+                    return JsonResponse({"status" : True, "data" : data})
+                else: return JsonResponse({"status" : False}, status=403)
+            else: return JsonResponse({"status" : False}, status=403)
 class bitrix_lid:
     final_url = None
     title = None
@@ -107,3 +157,4 @@ def add_lid_to_bitrix(request) -> JsonResponse:
             if sended['status']: return JsonResponse({"status" : True}, status = 200)
             else: return JsonResponse({"status" : False  }, status = 501)
         else: return JsonResponse({"status" : False, "text" : "Bad Request"}, status = 400)
+
