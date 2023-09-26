@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 class Position:
     @csrf_exempt
-    def url(request) -> JsonResponse:
+    def main_url(request) -> JsonResponse:
         #POST -> add new position
         if request.method == "POST": 
             request_data = request.POST
@@ -15,6 +15,7 @@ class Position:
                 "name" : request_data.get("name"),
                 "main_photo_path" : request_data.get("main_photo_path"),
                 "description" : request_data.get("description"),
+                "category" : request_data.get("category"),
                 "manufacturer" : request_data.get("manufacturer"),
                 "orign_country" : request_data.get("orign_country"),
                 "brand" : request_data.get("brand"),
@@ -32,6 +33,7 @@ class Position:
 
             position.objects.create(name = data['name'],
                                     main_photo_path = data['main_photo_path'],
+                                    category = data['category'],
                                     description = data['description'],
                                     manufacturer = data['manufacturer'],
                                     orign_country = data['orign_country'],
@@ -54,6 +56,7 @@ class Position:
                 value = position.objects.filter(id=id)
                 if len(value) > 0: 
                     data = {
+                    "id" : value[0].id,
                     "name" : value[0].name,
                     "main_photo_path" : value[0].main_photo_path,
                     "description" : value[0].description,
@@ -77,6 +80,7 @@ class Position:
                 value = position.objects.filter(name=name)
                 if len(value) > 0: 
                     data = {
+                    "id" : value[0].id,
                     "name" : value[0].name,
                     "main_photo_path" : value[0].main_photo_path,
                     "description" : value[0].description,
@@ -97,6 +101,44 @@ class Position:
                     return JsonResponse({"status" : True, "data" : data})
                 else: return JsonResponse({"status" : False}, status=403)
             else: return JsonResponse({"status" : False}, status=403)
+        elif request.method == "DELETE":
+            id = request.GET.get("id")
+            name = request.GET.get("name")
+            if id:
+                value = position.objects.filter(id=id).delete()
+                return JsonResponse({"status" : True})
+            elif name:
+                value = position.objects.filter(name=name).delete()
+                return JsonResponse({"status" : True})
+            else: return JsonResponse({"status" : False}, status=403)
+
+    #получить все позиции из бд
+    def all_positions(request):
+        data = []
+        test = position.objects.all()
+        for obj in test:
+            data.append({obj.name : {"id" : obj.id,
+                                     "name" : obj.name,
+                                     "main_photo_path" : obj.main_photo_path,
+                                     "description" : obj.description,
+                                     "manufacturer" : obj.manufacturer,
+                                     "orign_country" : obj.orign_country,
+                                     "brand" : obj.brand,
+                                     "colors" : obj.colors,
+                                     "colors_photo_path" : obj.colors_photo_path,
+                                     "opt_price" : obj.opt_price,
+                                     "discount_price" : obj.discount_price,
+                                     "unit" : obj.unit,
+                                     "unit_storage" : obj.unit_storage,
+                                     "weight" : obj.weight,
+                                     "volume" : obj.volume,
+                                     "length" : obj.length,
+                                     "width" : obj.width,
+                                     "count" : 1 }})
+            
+        
+        return JsonResponse({"status" : True,"data": data})
+
 class bitrix_lid:
     final_url = None
     title = None

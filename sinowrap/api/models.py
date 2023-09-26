@@ -4,6 +4,7 @@ class position(models.Model):
     name = models.TextField(max_length=228, default="Не указанно")
     main_photo_path = models.TextField(max_length=1028, default="Не указанно")
     description = models.TextField(max_length=1028, default="Не указанно")
+    category = models.TextField(max_length=1028, default="Не указанно")
     manufacturer = models.TextField(max_length=1028, default="Не указанно")
     orign_country = models.TextField(max_length=1028, default="Не указанно")
     brand = models.TextField(max_length=1028, default="Не указанно")
