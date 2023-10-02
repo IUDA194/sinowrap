@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from api.models import position
 import requests
+from random import randint, sample
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -9,46 +10,65 @@ class Position:
     @csrf_exempt
     def main_url(request) -> JsonResponse:
         #POST -> add new position
-        if request.method == "POST": 
-            request_data = request.POST
-            data = {
-                "name" : request_data.get("name"),
-                "main_photo_path" : request_data.get("main_photo_path"),
-                "description" : request_data.get("description"),
-                "category" : request_data.get("category"),
-                "manufacturer" : request_data.get("manufacturer"),
-                "orign_country" : request_data.get("orign_country"),
-                "brand" : request_data.get("brand"),
-                "colors" : request_data.get("colors"),
-                "colors_photo_path" : request_data.get("colors_photo_path"),
-                "opt_price" : request_data.get("opt_price"),
-                "discount_price" : request_data.get("discount_price"),
-                "unit" : request_data.get("unit"),
-                "unit_storage" : request_data.get("unit_storage"),
-                "weight" : request_data.get("weight"),
-                "volume" : request_data.get("volume"), 
-                "length" : request_data.get("length"),
-                "width" : request_data.get("width")
-            }
+        request_data = request.POST
+        if request.method == "POST":
+            if request_data.get("name") and \
+               request_data.get("main_photo_path") and \
+               request_data.get("description") and\
+               request_data.get("category") and\
+               request_data.get("manufacturer") and\
+               request_data.get("orign_country") and\
+               request_data.get("brand") and\
+               request_data.get("colors") and\
+               request_data.get("colors_photo_path") and\
+               request_data.get("opt_price") and\
+               request_data.get("discount_price") and\
+               request_data.get("unit") and\
+               request_data.get("unit_storage") and\
+               request_data.get("weight") and\
+               request_data.get("volume") and\
+               request_data.get("length") and\
+               request_data.get("width"):
+                data = {
+                    "name" : request_data.get("name"),
+                    "main_photo_path" : request_data.get("main_photo_path"),
+                    "description" : request_data.get("description"),
+                    "category" : request_data.get("category"),
+                    "manufacturer" : request_data.get("manufacturer"),
+                    "orign_country" : request_data.get("orign_country"),
+                    "brand" : request_data.get("brand"),
+                    "colors" : request_data.get("colors"),
+                    "colors_photo_path" : request_data.get("colors_photo_path"),
+                    "opt_price" : request_data.get("opt_price"),
+                    "discount_price" : request_data.get("discount_price"),
+                    "unit" : request_data.get("unit"),
+                    "unit_storage" : request_data.get("unit_storage"),
+                    "weight" : request_data.get("weight"),
+                    "volume" : request_data.get("volume"), 
+                    "length" : request_data.get("length"),
+                    "width" : request_data.get("width")
+                }
 
-            position.objects.create(name = data['name'],
-                                    main_photo_path = data['main_photo_path'],
-                                    category = data['category'],
-                                    description = data['description'],
-                                    manufacturer = data['manufacturer'],
-                                    orign_country = data['orign_country'],
-                                    brand = data['brand'],
-                                    colors = data['colors'],
-                                    colors_photo_path = data['colors_photo_path'],
-                                    opt_price = data['opt_price'],
-                                    discount_price = data['discount_price'],
-                                    unit = data['unit'],
-                                    unit_storage = data['unit_storage'],
-                                    weight = data['weight'],
-                                    volume = data['volume'],
-                                    length = data['length'],
-                                    width = data['width']).save()
-            return JsonResponse({"status" : True})
+                position.objects.create(name = data['name'],
+                                        main_photo_path = data['main_photo_path'],
+                                        category = data['category'],
+                                        description = data['description'],
+                                        manufacturer = data['manufacturer'],
+                                        orign_country = data['orign_country'],
+                                        brand = data['brand'],
+                                        colors = data['colors'],
+                                        colors_photo_path = data['colors_photo_path'],
+                                        opt_price = data['opt_price'],
+                                        discount_price = data['discount_price'],
+                                        unit = data['unit'],
+                                        unit_storage = data['unit_storage'],
+                                        weight = data['weight'],
+                                        volume = data['volume'],
+                                        length = data['length'],
+                                        width = data['width']).save()
+                return JsonResponse({"status" : True})
+            else:
+                return JsonResponse({"status" : False, "error" : "The field cannot be null"}, status=400)
         elif request.method == "GET":
             id = request.GET.get("id")
             name = request.GET.get("name")
@@ -56,6 +76,83 @@ class Position:
                 value = position.objects.filter(id=id)
                 category = value[0].category
                 same = position.objects.filter(category=category)
+                same_data = []
+                print(len(same))
+                if len(same) >= 3:
+                    rand_positions = sample(range(0, len(same)), 3)
+                    for rand_from_same in rand_positions:
+                        same_data.append({
+                            "id" : same[rand_from_same].id,
+                            "name" : same[rand_from_same].name,
+                            "main_photo_path" : same[rand_from_same].main_photo_path,
+                            "category" : same[rand_from_same].category,
+                            "description" : same[rand_from_same].description,
+                            "manufacturer" : same[rand_from_same].manufacturer,
+                            "orign_country" : same[rand_from_same].orign_country,
+                            "brand" : same[rand_from_same].brand,
+                            "colors" : same[rand_from_same].colors,
+                            "colors_photo_path" : same[rand_from_same].colors_photo_path,
+                            "opt_price" : same[rand_from_same].opt_price,
+                            "discount_price" : same[rand_from_same].discount_price,
+                            "unit" : same[rand_from_same].unit,
+                            "unit_storage" : same[rand_from_same].unit_storage,
+                            "weight" : same[rand_from_same].weight,
+                            "volume" : same[rand_from_same].volume, 
+                            "length" : same[rand_from_same].length,
+                            "width" : same[rand_from_same].width
+                        })
+                elif len(same) == 2:
+                    rand_positions = sample(range(0, len(same)), 2)
+                    rand_positions.append(rand_positions[0])
+                    for rand_from_same in rand_positions:
+                        same_data.append({
+                            "id" : same[rand_from_same].id,
+                            "name" : same[rand_from_same].name,
+                            "main_photo_path" : same[rand_from_same].main_photo_path,
+                            "category" : same[rand_from_same].category,
+                            "description" : same[rand_from_same].description,
+                            "manufacturer" : same[rand_from_same].manufacturer,
+                            "orign_country" : same[rand_from_same].orign_country,
+                            "brand" : same[rand_from_same].brand,
+                            "colors" : same[rand_from_same].colors,
+                            "colors_photo_path" : same[rand_from_same].colors_photo_path,
+                            "opt_price" : same[rand_from_same].opt_price,
+                            "discount_price" : same[rand_from_same].discount_price,
+                            "unit" : same[rand_from_same].unit,
+                            "unit_storage" : same[rand_from_same].unit_storage,
+                            "weight" : same[rand_from_same].weight,
+                            "volume" : same[rand_from_same].volume, 
+                            "length" : same[rand_from_same].length,
+                            "width" : same[rand_from_same].width
+                        })
+                elif len(same) == 1:
+                    rand_positions = sample(range(0, len(same)), 1)
+                    rand_positions.append(rand_positions[0])
+                    rand_positions.append(rand_positions[0])
+                    for rand_from_same in rand_positions:
+                        same_data.append({
+                            "id" : same[rand_from_same].id,
+                            "name" : same[rand_from_same].name,
+                            "main_photo_path" : same[rand_from_same].main_photo_path,
+                            "category" : same[rand_from_same].category,
+                            "description" : same[rand_from_same].description,
+                            "manufacturer" : same[rand_from_same].manufacturer,
+                            "orign_country" : same[rand_from_same].orign_country,
+                            "brand" : same[rand_from_same].brand,
+                            "colors" : same[rand_from_same].colors,
+                            "colors_photo_path" : same[rand_from_same].colors_photo_path,
+                            "opt_price" : same[rand_from_same].opt_price,
+                            "discount_price" : same[rand_from_same].discount_price,
+                            "unit" : same[rand_from_same].unit,
+                            "unit_storage" : same[rand_from_same].unit_storage,
+                            "weight" : same[rand_from_same].weight,
+                            "volume" : same[rand_from_same].volume, 
+                            "length" : same[rand_from_same].length,
+                            "width" : same[rand_from_same].width
+                        })
+                elif len(same) == 0:
+                    same_data == None
+
                 if len(value) > 0: 
                     data = {
                     "id" : value[0].id,
@@ -75,8 +172,8 @@ class Position:
                     "weight" : value[0].weight,
                     "volume" : value[0].volume, 
                     "length" : value[0].length,
-                    "width" : value[0].width
-                    }
+                    "width" : value[0].width,
+                    "same" : same_data}
                     return JsonResponse({"status" : True, "data" : data})
                 else: return JsonResponse({"status" : False}, status=403)
             elif name:
