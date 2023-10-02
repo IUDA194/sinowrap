@@ -54,11 +54,14 @@ class Position:
             name = request.GET.get("name")
             if id:
                 value = position.objects.filter(id=id)
+                category = value[0].category
+                same = position.objects.filter(category=category)
                 if len(value) > 0: 
                     data = {
                     "id" : value[0].id,
                     "name" : value[0].name,
                     "main_photo_path" : value[0].main_photo_path,
+                    "category" : value[0].category,
                     "description" : value[0].description,
                     "manufacturer" : value[0].manufacturer,
                     "orign_country" : value[0].orign_country,
@@ -113,31 +116,37 @@ class Position:
             else: return JsonResponse({"status" : False}, status=403)
 
     #получить все позиции из бд
+    @csrf_exempt
     def all_positions(request):
-        data = []
-        test = position.objects.all()
-        for obj in test:
-            data.append({obj.name : {"id" : obj.id,
-                                     "name" : obj.name,
-                                     "main_photo_path" : obj.main_photo_path,
-                                     "description" : obj.description,
-                                     "manufacturer" : obj.manufacturer,
-                                     "orign_country" : obj.orign_country,
-                                     "brand" : obj.brand,
-                                     "colors" : obj.colors,
-                                     "colors_photo_path" : obj.colors_photo_path,
-                                     "opt_price" : obj.opt_price,
-                                     "discount_price" : obj.discount_price,
-                                     "unit" : obj.unit,
-                                     "unit_storage" : obj.unit_storage,
-                                     "weight" : obj.weight,
-                                     "volume" : obj.volume,
-                                     "length" : obj.length,
-                                     "width" : obj.width,
-                                     "count" : 1 }})
-            
-        
-        return JsonResponse({"status" : True,"data": data})
+        if request.method == "GET":
+            data = []
+            test = position.objects.all()
+            for obj in test:
+                data.append({obj.name : {"id" : obj.id,
+                                        "name" : obj.name,
+                                        "main_photo_path" : obj.main_photo_path,
+                                        "description" : obj.description,
+                                        "manufacturer" : obj.manufacturer,
+                                        "orign_country" : obj.orign_country,
+                                        "brand" : obj.brand,
+                                        "colors" : obj.colors,
+                                        "colors_photo_path" : obj.colors_photo_path,
+                                        "opt_price" : obj.opt_price,
+                                        "discount_price" : obj.discount_price,
+                                        "unit" : obj.unit,
+                                        "unit_storage" : obj.unit_storage,
+                                        "weight" : obj.weight,
+                                        "volume" : obj.volume,
+                                        "length" : obj.length,
+                                        "width" : obj.width,
+                                        "count" : 1 }})
+            return JsonResponse({"status" : True,"data": data})
+        elif request.method == "DELETE":
+            all_data = position.objects.all()
+            for obj in all_data:
+                print(obj.id, "Deleted")
+                obj.delete()
+            return JsonResponse({"status" : True})
 
 class bitrix_lid:
     final_url = None
