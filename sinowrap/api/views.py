@@ -214,11 +214,11 @@ class Position:
 
     #получить все позиции из бд
     @csrf_exempt
-    def all_positions(request):
+    def all_positions(request) -> JsonResponse:
         if request.method == "GET":
             data = []
-            test = position.objects.all()
-            for obj in test:
+            data = position.objects.all()
+            for obj in data:
                 data.append({obj.name : {"id" : obj.id,
                                         "name" : obj.name,
                                         "main_photo_path" : obj.main_photo_path,
@@ -244,6 +244,41 @@ class Position:
                 print(obj.id, "Deleted")
                 obj.delete()
             return JsonResponse({"status" : True})
+
+    def get_all_category(request) -> JsonResponse:
+        if request.method == "GET":
+            data = []
+            all_positions = position.objects.all()
+            category = []
+            for positionn in all_positions:
+                category.append(positionn.category)
+            category = list(set(category))
+            for cat in category:
+                temp_data = []
+                same = position.objects.filter(category=cat)
+                rand_positions = sample(range(0, len(same)), 3)
+                for rand_from_same in rand_positions:
+                    temp_data.append({"id" : same[rand_from_same].id,
+                                "name" : same[rand_from_same].name,
+                                "main_photo_path" : same[rand_from_same].main_photo_path,
+                                "category" : same[rand_from_same].category,
+                                "description" : same[rand_from_same].description,
+                                "manufacturer" : same[rand_from_same].manufacturer,
+                                "orign_country" : same[rand_from_same].orign_country,
+                                "brand" : same[rand_from_same].brand,
+                                "colors" : same[rand_from_same].colors,
+                                "colors_photo_path" : same[rand_from_same].colors_photo_path,
+                                "opt_price" : same[rand_from_same].opt_price,
+                                "discount_price" : same[rand_from_same].discount_price,
+                                "unit" : same[rand_from_same].unit,
+                                "unit_storage" : same[rand_from_same].unit_storage,
+                                "weight" : same[rand_from_same].weight,
+                                "volume" : same[rand_from_same].volume, 
+                                "length" : same[rand_from_same].length,
+                                "width" : same[rand_from_same].width
+                            })
+                data.append({cat : temp_data})
+            return JsonResponse({"status" : True, "data" : data})
 
 class bitrix_lid:
     final_url = None
