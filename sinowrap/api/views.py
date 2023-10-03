@@ -4,6 +4,7 @@ from api.models import position
 import requests
 from random import randint, sample
 from django.views.decorators.csrf import csrf_exempt
+from math import floor
 
 
 class Position:
@@ -216,28 +217,94 @@ class Position:
     @csrf_exempt
     def all_positions(request) -> JsonResponse:
         if request.method == "GET":
-            data = []
-            data_temp = position.objects.all()
-            for obj in data_temp:
-                data.append({obj.name : {"id" : obj.id,
-                                        "name" : obj.name,
-                                        "main_photo_path" : obj.main_photo_path,
-                                        "description" : obj.description,
-                                        "manufacturer" : obj.manufacturer,
-                                        "orign_country" : obj.orign_country,
-                                        "brand" : obj.brand,
-                                        "colors" : obj.colors,
-                                        "colors_photo_path" : obj.colors_photo_path,
-                                        "opt_price" : obj.opt_price,
-                                        "discount_price" : obj.discount_price,
-                                        "unit" : obj.unit,
-                                        "unit_storage" : obj.unit_storage,
-                                        "weight" : obj.weight,
-                                        "volume" : obj.volume,
-                                        "length" : obj.length,
-                                        "width" : obj.width,
-                                        "count" : 1 }})
-            return JsonResponse({"status" : True,"data": data})
+            pag = request.GET.get("pag")
+            if not pag:
+                data = []
+                data_temp = position.objects.all()
+                for obj in data_temp:
+                    data.append({obj.name : {"id" : obj.id,
+                                            "name" : obj.name,
+                                            "main_photo_path" : obj.main_photo_path,
+                                            "description" : obj.description,
+                                            "manufacturer" : obj.manufacturer,
+                                            "orign_country" : obj.orign_country,
+                                            "brand" : obj.brand,
+                                            "colors" : obj.colors,
+                                            "colors_photo_path" : obj.colors_photo_path,
+                                            "opt_price" : obj.opt_price,
+                                            "discount_price" : obj.discount_price,
+                                            "unit" : obj.unit,
+                                            "unit_storage" : obj.unit_storage,
+                                            "weight" : obj.weight,
+                                            "volume" : obj.volume,
+                                            "length" : obj.length,
+                                            "width" : obj.width,
+                                            "count" : 1 }})
+                return JsonResponse({"status" : True,"data": data})
+            elif pag:
+                page_size = request.GET.get("page_size")
+                if not page_size:
+                    page_size = 10
+                data = []
+                data_temp = position.objects.all()
+                data_temp_len = len(position.objects.all())
+                number_pages = data_temp_len / int(page_size)
+                if floor(number_pages) >= int(pag):
+                    i = int(pag) * int(page_size) - int(page_size)
+                    while i != int(page_size) * int(pag):
+                        data.append({data_temp[i].name : {"id" : data_temp[i].id,
+                                                "name" : data_temp[i].name,
+                                                "main_photo_path" : data_temp[i].main_photo_path,
+                                                "description" : data_temp[i].description,
+                                                "manufacturer" : data_temp[i].manufacturer,
+                                                "orign_country" : data_temp[i].orign_country,
+                                                "brand" : data_temp[i].brand,
+                                                "colors" : data_temp[i].colors,
+                                                "colors_photo_path" : data_temp[i].colors_photo_path,
+                                                "opt_price" : data_temp[i].opt_price,
+                                                "discount_price" : data_temp[i].discount_price,
+                                                "unit" : data_temp[i].unit,
+                                                "unit_storage" : data_temp[i].unit_storage,
+                                                "weight" : data_temp[i].weight,
+                                                "volume" : data_temp[i].volume,
+                                                "length" : data_temp[i].length,
+                                                "width" : data_temp[i].width,
+                                                "count" : 1 }})
+                        i+=1
+                    return JsonResponse({"status" : True,
+                                        "number_pages" : number_pages,
+                                        "data" : data})
+                else:
+                    i = int(pag) * int(page_size) - int(page_size)
+                    try:
+                        while i != int(page_size) * int(pag):
+                            data.append({data_temp[i].name : {"id" : data_temp[i].id,
+                                                    "name" : data_temp[i].name,
+                                                    "main_photo_path" : data_temp[i].main_photo_path,
+                                                    "description" : data_temp[i].description,
+                                                    "manufacturer" : data_temp[i].manufacturer,
+                                                    "orign_country" : data_temp[i].orign_country,
+                                                    "brand" : data_temp[i].brand,
+                                                    "colors" : data_temp[i].colors,
+                                                    "colors_photo_path" : data_temp[i].colors_photo_path,
+                                                    "opt_price" : data_temp[i].opt_price,
+                                                    "discount_price" : data_temp[i].discount_price,
+                                                    "unit" : data_temp[i].unit,
+                                                    "unit_storage" : data_temp[i].unit_storage,
+                                                    "weight" : data_temp[i].weight,
+                                                    "volume" : data_temp[i].volume,
+                                                    "length" : data_temp[i].length,
+                                                    "width" : data_temp[i].width,
+                                                    "count" : 1 }})
+                            i+=1
+                    except IndexError:
+                        return JsonResponse({"status" : True,
+                                        "number_pages" : number_pages,
+                                        "data" : data})
+                    else:
+                        return JsonResponse({"status" : True,
+                                            "number_pages" : number_pages,
+                                            "data" : data})
         elif request.method == "DELETE":
             all_data = position.objects.all()
             for obj in all_data:
