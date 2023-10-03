@@ -217,8 +217,8 @@ class Position:
     def all_positions(request) -> JsonResponse:
         if request.method == "GET":
             data = []
-            data = position.objects.all()
-            for obj in data:
+            data_temp = position.objects.all()
+            for obj in data_temp:
                 data.append({obj.name : {"id" : obj.id,
                                         "name" : obj.name,
                                         "main_photo_path" : obj.main_photo_path,
