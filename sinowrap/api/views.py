@@ -85,7 +85,7 @@ class Position:
                 same_data = []
                 print(len(same))
                 if len(same) >= same_n:
-                    rand_positions = sample(range(0, len(same)), 4)
+                    rand_positions = sample(range(0, len(same)), same_n)
                     for rand_from_same in rand_positions:
                         colors_list = list(same[rand_from_same].colors.split(";"))
                         colors_path = list(same[rand_from_same].colors_photo_path.split(";"))
