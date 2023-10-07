@@ -92,7 +92,7 @@ class Position:
                         try: colors_total = list(map(int, same[rand_from_same].color_count.split(";")))
                         except: 
                             colors_total = []
-                            for i in len(colors_list):
+                            for i in range(len(colors_list)):
                                 colors_total.append(0)
 
                         colors = []
@@ -136,7 +136,7 @@ class Position:
                         try: colors_total = list(map(int, same[rand_from_same].color_count.split(";")))
                         except: 
                             colors_total = []
-                            for i in len(colors_list):
+                            for i in range(len(colors_list)):
                                 colors_total.append(0)
 
                         colors = []
@@ -174,7 +174,7 @@ class Position:
                     try: colors_total = list(map(int, same[rand_from_same].color_count.split(";")))
                     except: 
                         colors_total = []
-                        for i in len(colors_list):
+                        for i in range(len(colors_list)):
                             colors_total.append(0)
 
                     colors = []
@@ -260,7 +260,7 @@ class Position:
                     try: colors_total = list(map(int, obj.color_count.split(";")))
                     except: 
                         colors_total = []
-                        for i in len(colors_list):
+                        for i in range(len(colors_list)):
                             colors_total.append(0)
 
                     colors = []
