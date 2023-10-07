@@ -18,3 +18,4 @@ class position(models.Model):
     volume = models.FloatField(default=0)
     length = models.FloatField(default=0)
     width = models.FloatField(default=0)
+    color_count = models.TextField(max_length=228, default="0;0")

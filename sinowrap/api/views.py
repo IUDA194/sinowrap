@@ -4,7 +4,7 @@ from api.models import position
 import requests
 from random import randint, sample
 from django.views.decorators.csrf import csrf_exempt
-from math import floor
+from math import floor,ceil
 
 
 class Position:
@@ -47,6 +47,7 @@ class Position:
                     "weight" : request_data.get("weight"),
                     "volume" : request_data.get("volume"), 
                     "length" : request_data.get("length"),
+                    "color_count" : request_data.get("color_count"),
                     "width" : request_data.get("width")
                 }
 
@@ -66,6 +67,7 @@ class Position:
                                         weight = data['weight'],
                                         volume = data['volume'],
                                         length = data['length'],
+                                        color_count = data['color_count'],
                                         width = data['width']).save()
                 return JsonResponse({"status" : True})
             else:
@@ -73,15 +75,36 @@ class Position:
         elif request.method == "GET":
             id = request.GET.get("id")
             name = request.GET.get("name")
+            same_n = request.GET.get("same")
+            if not same_n: same_n = 4
+            else: same_n = int(same_n)
             if id:
                 value = position.objects.filter(id=id)
                 category = value[0].category
                 same = position.objects.filter(category=category)
                 same_data = []
                 print(len(same))
-                if len(same) >= 3:
-                    rand_positions = sample(range(0, len(same)), 3)
+                if len(same) >= same_n:
+                    rand_positions = sample(range(0, len(same)), 4)
                     for rand_from_same in rand_positions:
+                        colors_list = list(same[rand_from_same].colors.split(";"))
+                        colors_path = list(same[rand_from_same].colors_photo_path.split(";"))
+                        try: colors_total = list(map(int, same[rand_from_same].color_count.split(";")))
+                        except: 
+                            colors_total = []
+                            for i in len(colors_list):
+                                colors_total.append(0)
+
+                        colors = []
+
+                        for i in range(len(colors_list)):
+                            colors.append({
+                                        "name" : colors_list[i],
+                                        "photo_path" : colors_path[i],
+                                        "total" : colors_total[i],
+                                        "opt_price" : same[rand_from_same].opt_price,
+                                        "count" : 1
+                                        })
                         same_data.append({
                             "id" : same[rand_from_same].id,
                             "name" : same[rand_from_same].name,
@@ -91,8 +114,7 @@ class Position:
                             "manufacturer" : same[rand_from_same].manufacturer,
                             "orign_country" : same[rand_from_same].orign_country,
                             "brand" : same[rand_from_same].brand,
-                            "colors" : same[rand_from_same].colors,
-                            "colors_photo_path" : same[rand_from_same].colors_photo_path,
+                            "colors" : colors,
                             "opt_price" : same[rand_from_same].opt_price,
                             "discount_price" : same[rand_from_same].discount_price,
                             "unit" : same[rand_from_same].unit,
@@ -102,59 +124,68 @@ class Position:
                             "length" : same[rand_from_same].length,
                             "width" : same[rand_from_same].width
                         })
-                elif len(same) == 2:
-                    rand_positions = sample(range(0, len(same)), 2)
-                    rand_positions.append(rand_positions[0])
-                    for rand_from_same in rand_positions:
-                        same_data.append({
-                            "id" : same[rand_from_same].id,
-                            "name" : same[rand_from_same].name,
-                            "main_photo_path" : same[rand_from_same].main_photo_path,
-                            "category" : same[rand_from_same].category,
-                            "description" : same[rand_from_same].description,
-                            "manufacturer" : same[rand_from_same].manufacturer,
-                            "orign_country" : same[rand_from_same].orign_country,
-                            "brand" : same[rand_from_same].brand,
-                            "colors" : same[rand_from_same].colors,
-                            "colors_photo_path" : same[rand_from_same].colors_photo_path,
-                            "opt_price" : same[rand_from_same].opt_price,
-                            "discount_price" : same[rand_from_same].discount_price,
-                            "unit" : same[rand_from_same].unit,
-                            "unit_storage" : same[rand_from_same].unit_storage,
-                            "weight" : same[rand_from_same].weight,
-                            "volume" : same[rand_from_same].volume, 
-                            "length" : same[rand_from_same].length,
-                            "width" : same[rand_from_same].width
-                        })
-                elif len(same) == 1:
-                    rand_positions = sample(range(0, len(same)), 1)
-                    rand_positions.append(rand_positions[0])
-                    rand_positions.append(rand_positions[0])
-                    for rand_from_same in rand_positions:
-                        same_data.append({
-                            "id" : same[rand_from_same].id,
-                            "name" : same[rand_from_same].name,
-                            "main_photo_path" : same[rand_from_same].main_photo_path,
-                            "category" : same[rand_from_same].category,
-                            "description" : same[rand_from_same].description,
-                            "manufacturer" : same[rand_from_same].manufacturer,
-                            "orign_country" : same[rand_from_same].orign_country,
-                            "brand" : same[rand_from_same].brand,
-                            "colors" : same[rand_from_same].colors,
-                            "colors_photo_path" : same[rand_from_same].colors_photo_path,
-                            "opt_price" : same[rand_from_same].opt_price,
-                            "discount_price" : same[rand_from_same].discount_price,
-                            "unit" : same[rand_from_same].unit,
-                            "unit_storage" : same[rand_from_same].unit_storage,
-                            "weight" : same[rand_from_same].weight,
-                            "volume" : same[rand_from_same].volume, 
-                            "length" : same[rand_from_same].length,
-                            "width" : same[rand_from_same].width
-                        })
-                elif len(same) == 0:
                     same_data == None
+                else:
+                    donthave = same_n - len(same)
+                    rand_positions = sample(range(0, len(same)), len(same))
+                    for i in range(donthave):
+                        rand_positions.append(rand_positions[0])
+                    for rand_from_same in rand_positions:
+                        colors_list = list(same[rand_from_same].colors.split(";"))
+                        colors_path = list(same[rand_from_same].colors_photo_path.split(";"))
+                        try: colors_total = list(map(int, same[rand_from_same].color_count.split(";")))
+                        except: 
+                            colors_total = []
+                            for i in len(colors_list):
+                                colors_total.append(0)
+
+                        colors = []
+                        for i in range(len(colors_list)):
+                            colors.append({
+                                            "name" : colors_list[i],
+                                            "photo_path" : colors_path[i],
+                                            "total" : colors_total[i],
+                                            "opt_price" : same[rand_from_same].opt_price,
+                                            "count" : 1
+                                            })
+                        same_data.append({
+                            "id" : same[rand_from_same].id,
+                            "name" : same[rand_from_same].name,
+                            "main_photo_path" : same[rand_from_same].main_photo_path,
+                            "category" : same[rand_from_same].category,
+                            "description" : same[rand_from_same].description,
+                            "manufacturer" : same[rand_from_same].manufacturer,
+                            "orign_country" : same[rand_from_same].orign_country,
+                            "brand" : same[rand_from_same].brand,
+                            "colors" :colors,
+                            "opt_price" : same[rand_from_same].opt_price,
+                            "discount_price" : same[rand_from_same].discount_price,
+                            "unit" : same[rand_from_same].unit,
+                            "unit_storage" : same[rand_from_same].unit_storage,
+                            "weight" : same[rand_from_same].weight,
+                            "volume" : same[rand_from_same].volume, 
+                            "length" : same[rand_from_same].length,
+                            "width" : same[rand_from_same].width
+                        })
 
                 if len(value) > 0: 
+                    colors_list = list(same[rand_from_same].colors.split(";"))
+                    colors_path = list(same[rand_from_same].colors_photo_path.split(";"))
+                    try: colors_total = list(map(int, same[rand_from_same].color_count.split(";")))
+                    except: 
+                        colors_total = []
+                        for i in len(colors_list):
+                            colors_total.append(0)
+
+                    colors = []
+                    for i in range(len(colors_list)):
+                        colors.append({
+                                        "name" : colors_list[i],
+                                        "photo_path" : colors_path[i],
+                                        "total" : colors_total[i],
+                                        "opt_price" : same[rand_from_same].opt_price,
+                                        "count" : 1
+                                        })
                     data = {
                     "id" : value[0].id,
                     "name" : value[0].name,
@@ -164,8 +195,7 @@ class Position:
                     "manufacturer" : value[0].manufacturer,
                     "orign_country" : value[0].orign_country,
                     "brand" : value[0].brand,
-                    "colors" : value[0].colors,
-                    "colors_photo_path" : value[0].colors_photo_path,
+                    "colors" : colors,
                     "opt_price" : value[0].opt_price,
                     "discount_price" : value[0].discount_price,
                     "unit" : value[0].unit,
@@ -174,6 +204,7 @@ class Position:
                     "volume" : value[0].volume, 
                     "length" : value[0].length,
                     "width" : value[0].width,
+                    "count" : 1,
                     "same" : same_data}
                     return JsonResponse({"status" : True, "data" : data})
                 else: return JsonResponse({"status" : False}, status=403)
@@ -218,10 +249,32 @@ class Position:
     def all_positions(request) -> JsonResponse:
         if request.method == "GET":
             pag = request.GET.get("pag")
+            category = request.GET.get("category")
             if not pag:
                 data = []
-                data_temp = position.objects.all()
+                if not category: data_temp = position.objects.all()
+                else: data_temp = position.objects.filter(category=category)
                 for obj in data_temp:
+                    colors_list = list(obj.colors.split(";"))
+                    colors_path = list(obj.colors_photo_path.split(";"))
+                    try: colors_total = list(map(int, obj.color_count.split(";")))
+                    except: 
+                        colors_total = []
+                        for i in len(colors_list):
+                            colors_total.append(0)
+
+                    colors = []
+
+                    for i in range(len(colors_list)):
+                        colors.append({
+                                       "name" : colors_list[i],
+                                       "photo_path" : colors_path[i],
+                                       "total" : colors_total[i],
+                                       "opt_price" : obj.opt_price,
+                                       "count" : 1
+                                       })
+
+
                     data.append({obj.name : {"id" : obj.id,
                                             "name" : obj.name,
                                             "main_photo_path" : obj.main_photo_path,
@@ -229,8 +282,7 @@ class Position:
                                             "manufacturer" : obj.manufacturer,
                                             "orign_country" : obj.orign_country,
                                             "brand" : obj.brand,
-                                            "colors" : obj.colors,
-                                            "colors_photo_path" : obj.colors_photo_path,
+                                            "colors" : colors,
                                             "opt_price" : obj.opt_price,
                                             "discount_price" : obj.discount_price,
                                             "unit" : obj.unit,
@@ -239,14 +291,16 @@ class Position:
                                             "volume" : obj.volume,
                                             "length" : obj.length,
                                             "width" : obj.width,
-                                            "count" : 1 }})
+                                            "count" : 1 
+                                            }})
                 return JsonResponse({"status" : True,"data": data})
             elif pag:
                 page_size = request.GET.get("page_size")
                 if not page_size:
                     page_size = 10
                 data = []
-                data_temp = position.objects.all()
+                if not category: data_temp = position.objects.all()
+                else: data_temp = position.objects.filter(category=category)
                 data_temp_len = len(position.objects.all())
                 number_pages = data_temp_len / int(page_size)
                 if floor(number_pages) >= int(pag):
@@ -272,7 +326,7 @@ class Position:
                                                 "count" : 1 }})
                         i+=1
                     return JsonResponse({"status" : True,
-                                        "number_pages" : number_pages,
+                                        "number_pages" : ceil(number_pages),
                                         "data" : data})
                 else:
                     i = int(pag) * int(page_size) - int(page_size)
@@ -299,11 +353,11 @@ class Position:
                             i+=1
                     except IndexError:
                         return JsonResponse({"status" : True,
-                                        "number_pages" : number_pages,
+                                        "number_pages" : ceil(number_pages),
                                         "data" : data})
                     else:
                         return JsonResponse({"status" : True,
-                                            "number_pages" : number_pages,
+                                            "number_pages" : ceil(number_pages),
                                             "data" : data})
         elif request.method == "DELETE":
             all_data = position.objects.all()
@@ -323,8 +377,10 @@ class Position:
             for cat in category:
                 temp_data = []
                 same = position.objects.filter(category=cat)
+                print(len(same))
                 rand_positions = sample(range(0, len(same)), 3)
                 for rand_from_same in rand_positions:
+
                     temp_data.append({"id" : same[rand_from_same].id,
                                 "name" : same[rand_from_same].name,
                                 "main_photo_path" : same[rand_from_same].main_photo_path,
@@ -344,7 +400,9 @@ class Position:
                                 "length" : same[rand_from_same].length,
                                 "width" : same[rand_from_same].width
                             })
-                data.append({cat : temp_data})
+                data.append({"name" : cat,
+                             "type" : cat, # eng  
+                             "data" : temp_data})
             return JsonResponse({"status" : True, "data" : data})
 
 class bitrix_lid:
