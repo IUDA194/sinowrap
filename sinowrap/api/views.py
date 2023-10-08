@@ -292,7 +292,7 @@ class Position:
                                             "width" : obj.width,
                                             "count" : 1 
                                             }})
-                return JsonResponse({"status" : True,"data": data})
+                return JsonResponse({"status" : True, "data": data})
             elif pag:
                 page_size = request.GET.get("page_size")
                 if not page_size:
@@ -390,12 +390,16 @@ class Position:
                             iteration += 1
                     except IndexError:
                         return JsonResponse({"status" : True,
-                                        "number_pages" : ceil(number_pages),
+                                        "page" : ceil(number_pages),
+                                        "next" : int(pag) < ceil(number_pages),
+                                        "previous" : int(pag) >= ceil(number_pages),
                                         "data" : data})
                     else:
                         return JsonResponse({"status" : True,
-                                            "number_pages" : ceil(number_pages),
-                                            "data" : data})
+                                        "page" : ceil(number_pages),
+                                        "next" : int(pag) < ceil(number_pages),
+                                        "previous" : int(pag) >= ceil(number_pages),
+                                        "data" : data})
         elif request.method == "DELETE":
             all_data = position.objects.all()
             for obj in all_data:
