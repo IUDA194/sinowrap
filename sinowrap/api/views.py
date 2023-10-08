@@ -359,7 +359,7 @@ class Position:
                                 for i in range(len(colors_list)):
                                     colors_total.append(0)
 
-                                colors = []
+                            colors = []
 
                             for i in range(len(colors_list)):
                                 colors.append({
