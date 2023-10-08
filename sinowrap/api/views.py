@@ -278,6 +278,7 @@ class Position:
                     data.append({obj.name : {"id" : obj.id,
                                             "name" : obj.name,
                                             "main_photo_path" : obj.main_photo_path,
+                                            "category" : obj.category,
                                             "description" : obj.description,
                                             "manufacturer" : obj.manufacturer,
                                             "orign_country" : obj.orign_country,
@@ -306,15 +307,33 @@ class Position:
                 if floor(number_pages) >= int(pag):
                     i = int(pag) * int(page_size) - int(page_size)
                     while i != int(page_size) * int(pag):
+                        colors_list = list(data_temp[i].colors.split(";"))
+                        colors_path = list(data_temp[i].colors_photo_path.split(";"))
+                        try: colors_total = list(map(int, data_temp[i].color_count.split(";")))
+                        except: 
+                            colors_total = []
+                            for i in range(len(colors_list)):
+                                colors_total.append(0)
+
+                            colors = []
+
+                        for i in range(len(colors_list)):
+                            colors.append({
+                                                "name" : colors_list[i],
+                                                "photo_path" : colors_path[i],
+                                                "total" : colors_total[i],
+                                                "opt_price" : data_temp[i].opt_price,
+                                                "count" : 1
+                                                })
                         data.append({data_temp[i].name : {"id" : data_temp[i].id,
                                                 "name" : data_temp[i].name,
                                                 "main_photo_path" : data_temp[i].main_photo_path,
+                                                "category" : data_temp[i].category,
                                                 "description" : data_temp[i].description,
                                                 "manufacturer" : data_temp[i].manufacturer,
                                                 "orign_country" : data_temp[i].orign_country,
                                                 "brand" : data_temp[i].brand,
-                                                "colors" : data_temp[i].colors,
-                                                "colors_photo_path" : data_temp[i].colors_photo_path,
+                                                "colors" : colors,
                                                 "opt_price" : data_temp[i].opt_price,
                                                 "discount_price" : data_temp[i].discount_price,
                                                 "unit" : data_temp[i].unit,
@@ -332,15 +351,33 @@ class Position:
                     i = int(pag) * int(page_size) - int(page_size)
                     try:
                         while i != int(page_size) * int(pag):
+                            colors_list = list(data_temp[i].colors.split(";"))
+                            colors_path = list(data_temp[i].colors_photo_path.split(";"))
+                            try: colors_total = list(map(int, data_temp[i].color_count.split(";")))
+                            except: 
+                                colors_total = []
+                                for i in range(len(colors_list)):
+                                    colors_total.append(0)
+
+                                colors = []
+
+                            for i in range(len(colors_list)):
+                                colors.append({
+                                                    "name" : colors_list[i],
+                                                    "photo_path" : colors_path[i],
+                                                    "total" : colors_total[i],
+                                                    "opt_price" : data_temp[i].opt_price,
+                                                    "count" : 1
+                                                    })
                             data.append({data_temp[i].name : {"id" : data_temp[i].id,
                                                     "name" : data_temp[i].name,
                                                     "main_photo_path" : data_temp[i].main_photo_path,
+                                                    "category" : data_temp[i].category,
                                                     "description" : data_temp[i].description,
                                                     "manufacturer" : data_temp[i].manufacturer,
                                                     "orign_country" : data_temp[i].orign_country,
                                                     "brand" : data_temp[i].brand,
-                                                    "colors" : data_temp[i].colors,
-                                                    "colors_photo_path" : data_temp[i].colors_photo_path,
+                                                    "colors" : colors,
                                                     "opt_price" : data_temp[i].opt_price,
                                                     "discount_price" : data_temp[i].discount_price,
                                                     "unit" : data_temp[i].unit,
@@ -366,6 +403,7 @@ class Position:
                 obj.delete()
             return JsonResponse({"status" : True})
 
+    @csrf_exempt
     def get_all_category(request) -> JsonResponse:
         if request.method == "GET":
             data = []
@@ -381,7 +419,8 @@ class Position:
                 rand_positions = sample(range(0, len(same)), 3)
                 for rand_from_same in rand_positions:
 
-                    temp_data.append({"id" : same[rand_from_same].id,
+                    temp_data.append({
+                                "id" : same[rand_from_same].id,
                                 "name" : same[rand_from_same].name,
                                 "main_photo_path" : same[rand_from_same].main_photo_path,
                                 "category" : same[rand_from_same].category,
