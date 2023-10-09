@@ -83,7 +83,6 @@ class Position:
                 category = value[0].category
                 same = position.objects.filter(category=category)
                 same_data = []
-                print(len(same))
                 if len(same) >= same_n:
                     rand_positions = sample(range(0, len(same)), same_n)
                     for rand_from_same in rand_positions:
@@ -301,8 +300,8 @@ class Position:
                 else: data_temp = position.objects.filter(category=category)
                 data_temp_len = len(position.objects.all())
                 number_pages = data_temp_len / int(page_size)
+                print(int(pag) * int(page_size) - int(page_size), "|", int(page_size) * int(pag))
                 if floor(number_pages) >= int(pag):
-                    print(1)
                     i = int(pag) * int(page_size) - int(page_size)
                     while i != int(page_size) * int(pag):
                         colors_list = list(data_temp[i].colors.split(";"))
@@ -401,7 +400,6 @@ class Position:
         elif request.method == "DELETE":
             all_data = position.objects.all()
             for obj in all_data:
-                print(obj.id, "Deleted")
                 obj.delete()
             return JsonResponse({"status" : True})
 
@@ -417,7 +415,6 @@ class Position:
             for cat in category:
                 temp_data = []
                 same = position.objects.filter(category=cat)
-                print(len(same))
                 rand_positions = sample(range(0, len(same)), 3)
                 for rand_from_same in rand_positions:
 
@@ -494,7 +491,6 @@ def add_lid_to_bitrix(request) -> JsonResponse:
                 "email" : request_data.get("email"),
                 "phone" : request_data.get("phone"),
                 "cart" : request_data.get("cart")}
-        print(data)
         if data["title"] and data["name"] and data["last_name"] and data["email"] and data['phone'] and data['cart']:
             lid = bitrix_lid(title=data["title"], 
                              name=data["name"], 
