@@ -295,8 +295,7 @@ class Position:
                 return JsonResponse({"status" : True, "data": data})
             elif pag:
                 page_size = request.GET.get("page_size")
-                if not page_size:
-                    page_size = 10
+                if not page_size: page_size = 10
                 data = []
                 if not category: data_temp = position.objects.all()
                 else: data_temp = position.objects.filter(category=category)
@@ -305,24 +304,23 @@ class Position:
                 if floor(number_pages) >= int(pag):
 
                     i = int(pag) * int(page_size) - int(page_size)
-                    print(int(page_size) * int(pag))
                     while i != int(page_size) * int(pag):
                         colors_list = list(data_temp[i].colors.split(";"))
                         colors_path = list(data_temp[i].colors_photo_path.split(";"))
                         try: colors_total = list(map(int, data_temp[i].color_count.split(";")))
                         except: 
                             colors_total = []
-                            for i in range(len(colors_list)):
+                            for n in range(len(colors_list)):
                                 colors_total.append(0)
 
                             colors = []
 
-                        for i in range(len(colors_list)):
+                        for iter in range(len(colors_list)):
                             colors.append({
-                                                "name" : colors_list[i],
-                                                "photo_path" : colors_path[i],
-                                                "total" : colors_total[i],
-                                                "opt_price" : data_temp[i].opt_price,
+                                                "name" : colors_list[iter],
+                                                "photo_path" : colors_path[iter],
+                                                "total" : colors_total[iter],
+                                                "opt_price" : data_temp[iter].opt_price,
                                                 "count" : 1
                                                 })
                         data.append({data_temp[i].name : {"id" : data_temp[i].id,
