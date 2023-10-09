@@ -314,7 +314,7 @@ class Position:
                                 colors_total.append(0)
 
                             colors = []
-
+                        print("was 2 iter")
                         for iter in range(len(colors_list)):
                             colors.append({
                                                 "name" : colors_list[iter],
@@ -323,6 +323,7 @@ class Position:
                                                 "opt_price" : data_temp[iter].opt_price,
                                                 "count" : 1
                                                 })
+                        print("was 2 iter")
                         data.append({data_temp[i].name : {"id" : data_temp[i].id,
                                                 "name" : data_temp[i].name,
                                                 "main_photo_path" : data_temp[i].main_photo_path,
