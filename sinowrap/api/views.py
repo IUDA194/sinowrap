@@ -302,7 +302,7 @@ class Position:
                 data_temp_len = len(position.objects.all())
                 number_pages = data_temp_len / int(page_size)
                 if floor(number_pages) >= int(pag):
-
+                    print(1)
                     i = int(pag) * int(page_size) - int(page_size)
                     while i != int(page_size) * int(pag):
                         colors_list = list(data_temp[i].colors.split(";"))
