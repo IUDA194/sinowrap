@@ -264,6 +264,7 @@ class Position:
 
                     for i in range(len(colors_list)):
                         colors.append({
+                                       "id" : obj.opt_price,
                                        "name" : colors_list[i],
                                        "photo_path" : colors_path[i],
                                        "total" : colors_total[i],
@@ -272,7 +273,7 @@ class Position:
                                        })
 
 
-                    data.append({obj.name : {"id" : obj.id,
+                    data.append({"id" : obj.id,
                                             "name" : obj.name,
                                             "main_photo_path" : obj.main_photo_path,
                                             "category" : obj.category,
@@ -290,7 +291,7 @@ class Position:
                                             "length" : obj.length,
                                             "width" : obj.width,
                                             "count" : 1 
-                                            }})
+                                            })
                 return JsonResponse({"status" : True, "data": data})
             elif pag:
                 page_size = request.GET.get("page_size")
@@ -318,6 +319,7 @@ class Position:
                             colors_total = [0] * len(colors_list)
 
                         colors = [{
+                            "id" : data_temp[i].id,
                             "name": colors_list[j],
                             "photo_path": colors_path[j],
                             "total": colors_total[j],
@@ -367,15 +369,16 @@ class Position:
 
                             colors = []
 
-                            for iter in range(len(colors_list)):
+                            for j in range(len(colors_list)):
                                 colors.append({
-                                                    "name" : colors_list[iter],
-                                                    "photo_path" : colors_path[iter],
-                                                    "total" : colors_total[iter],
-                                                    "opt_price" : data_temp[iter].opt_price,
-                                                    "count" : 1
+                                                "id" : data_temp[i].id,
+                                                "name": colors_list[j],
+                                                "photo_path": colors_path[j],
+                                                "total": colors_total[j],
+                                                "opt_price": data_temp[i].opt_price,
+                                                "count": 1
                                                     })
-                            data.append({data_temp[iteration].name : {"id" : data_temp[iteration].id,
+                            data.append({"id" : data_temp[iteration].id,
                                                     "name" : data_temp[iteration].name,
                                                     "main_photo_path" : data_temp[iteration].main_photo_path,
                                                     "category" : data_temp[iteration].category,
@@ -392,7 +395,7 @@ class Position:
                                                     "volume" : data_temp[iteration].volume,
                                                     "length" : data_temp[iteration].length,
                                                     "width" : data_temp[iteration].width,
-                                                    "count" : 1 }})
+                                                    "count" : 1 })
                             iteration += 1
                     except IndexError:
                         return JsonResponse({"status" : True,
