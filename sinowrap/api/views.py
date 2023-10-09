@@ -326,7 +326,6 @@ class Position:
                         } for j in range(len(colors_list))]
 
                         product_data = {
-                            data_temp[i].name: {
                                 "id": data_temp[i].id,
                                 "name": data_temp[i].name,
                                 "main_photo_path": data_temp[i].main_photo_path,
@@ -345,7 +344,6 @@ class Position:
                                 "length": data_temp[i].length,
                                 "width": data_temp[i].width,
                                 "count": 1
-                            }
                         }
                         data.append(product_data)
 
