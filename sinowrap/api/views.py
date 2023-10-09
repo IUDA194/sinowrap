@@ -300,7 +300,6 @@ class Position:
                 else: data_temp = position.objects.filter(category=category)
                 data_temp_len = len(position.objects.all())
                 number_pages = data_temp_len / int(page_size)
-                print(int(pag) * int(page_size) - int(page_size), "|", int(page_size) * int(pag))
                 if floor(number_pages) >= int(pag):
                     start_index = int(pag) * int(page_size) - int(page_size)
                     end_index = int(page_size) * int(pag)
