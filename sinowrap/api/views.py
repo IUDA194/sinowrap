@@ -304,6 +304,7 @@ class Position:
                 if floor(number_pages) >= int(pag):
                     i = int(pag) * int(page_size) - int(page_size)
                     while i != int(page_size) * int(pag):
+                        print("was 1 iter")
                         colors_list = list(data_temp[i].colors.split(";"))
                         colors_path = list(data_temp[i].colors_photo_path.split(";"))
                         try: colors_total = list(map(int, data_temp[i].color_count.split(";")))
