@@ -98,6 +98,7 @@ class Position:
 
                         for i in range(len(colors_list)):
                             colors.append({
+                                        "id" : same[rand_from_same].name,
                                         "name" : colors_list[i],
                                         "photo_path" : colors_path[i],
                                         "total" : colors_total[i],
@@ -141,6 +142,7 @@ class Position:
                         colors = []
                         for i in range(len(colors_list)):
                             colors.append({
+                                            "id" : same[rand_from_same].name,
                                             "name" : colors_list[i],
                                             "photo_path" : colors_path[i],
                                             "total" : colors_total[i],
@@ -179,6 +181,7 @@ class Position:
                     colors = []
                     for i in range(len(colors_list)):
                         colors.append({
+                                        "id" : same[rand_from_same].name,
                                         "name" : colors_list[i],
                                         "photo_path" : colors_path[i],
                                         "total" : colors_total[i],
@@ -319,7 +322,7 @@ class Position:
                             colors_total = [0] * len(colors_list)
 
                         colors = [{
-                            "id" : data_temp[i].id,
+                            "id" : data_temp[i].name,
                             "name": colors_list[j],
                             "photo_path": colors_path[j],
                             "total": colors_total[j],
@@ -349,12 +352,12 @@ class Position:
                         }
                         data.append(product_data)
 
-                    return JsonResponse({
-                        "status": True,
-                        "number_pages": ceil(number_pages),
-                        "data": data
-                    })
-
+                    return JsonResponse({"status" : True,
+                                        "total_pages": ceil(number_pages),
+                                        "page" : ceil(number_pages),
+                                        "next" : int(pag) < ceil(number_pages),
+                                        "previous" : int(pag) >= ceil(number_pages),
+                                        "data" : data})
                 else:
                     try:
                         start_index = int(pag) * int(page_size) - int(page_size)
@@ -374,7 +377,7 @@ class Position:
                                 colors_total = [0] * len(colors_list)
 
                             colors = [{
-                                "id" : data_temp[i].id,
+                                "id" : data_temp[i].name,
                                 "name": colors_list[j],
                                 "photo_path": colors_path[j],
                                 "total": colors_total[j],
@@ -406,12 +409,14 @@ class Position:
 
                     except IndexError:
                         return JsonResponse({"status" : True,
+                                        "total_pages": ceil(number_pages),
                                         "page" : ceil(number_pages),
                                         "next" : int(pag) < ceil(number_pages),
                                         "previous" : int(pag) >= ceil(number_pages),
                                         "data" : data})
                     else:
                         return JsonResponse({"status" : True,
+                                        "total_pages": ceil(number_pages),
                                         "page" : ceil(number_pages),
                                         "next" : int(pag) < ceil(number_pages),
                                         "previous" : int(pag) >= ceil(number_pages),
