@@ -302,50 +302,60 @@ class Position:
                 number_pages = data_temp_len / int(page_size)
                 print(int(pag) * int(page_size) - int(page_size), "|", int(page_size) * int(pag))
                 if floor(number_pages) >= int(pag):
-                    i = int(pag) * int(page_size) - int(page_size)
-                    while i != int(page_size) * int(pag):
-                        print("was 1 iter")
-                        colors_list = list(data_temp[i].colors.split(";"))
-                        colors_path = list(data_temp[i].colors_photo_path.split(";"))
-                        try: colors_total = list(map(int, data_temp[i].color_count.split(";")))
-                        except: 
-                            colors_total = []
-                            for n in range(len(colors_list)):
-                                colors_total.append(0)
+                    start_index = int(pag) * int(page_size) - int(page_size)
+                    end_index = int(page_size) * int(pag)
 
-                            colors = []
-                        print("was 2 iter")
-                        for iter in range(len(colors_list)):
-                            colors.append({
-                                                "name" : colors_list[iter],
-                                                "photo_path" : colors_path[iter],
-                                                "total" : colors_total[iter],
-                                                "opt_price" : data_temp[iter].opt_price,
-                                                "count" : 1
-                                                })
-                        print("was 2 iter")
-                        data.append({data_temp[i].name : {"id" : data_temp[i].id,
-                                                "name" : data_temp[i].name,
-                                                "main_photo_path" : data_temp[i].main_photo_path,
-                                                "category" : data_temp[i].category,
-                                                "description" : data_temp[i].description,
-                                                "manufacturer" : data_temp[i].manufacturer,
-                                                "orign_country" : data_temp[i].orign_country,
-                                                "brand" : data_temp[i].brand,
-                                                "colors" : colors,
-                                                "opt_price" : data_temp[i].opt_price,
-                                                "discount_price" : data_temp[i].discount_price,
-                                                "unit" : data_temp[i].unit,
-                                                "unit_storage" : data_temp[i].unit_storage,
-                                                "weight" : data_temp[i].weight,
-                                                "volume" : data_temp[i].volume,
-                                                "length" : data_temp[i].length,
-                                                "width" : data_temp[i].width,
-                                                "count" : 1 }})
-                        i+=1
-                    return JsonResponse({"status" : True,
-                                        "number_pages" : ceil(number_pages),
-                                        "data" : data})
+                    data = []
+
+                    for i in range(start_index, end_index):
+                        if i >= len(data_temp):
+                            break
+
+                        colors_list = data_temp[i].colors.split(";")
+                        colors_path = data_temp[i].colors_photo_path.split(";")
+                        try:
+                            colors_total = list(map(int, data_temp[i].color_count.split(";")))
+                        except:
+                            colors_total = [0] * len(colors_list)
+
+                        colors = [{
+                            "name": colors_list[j],
+                            "photo_path": colors_path[j],
+                            "total": colors_total[j],
+                            "opt_price": data_temp[i].opt_price,
+                            "count": 1
+                        } for j in range(len(colors_list))]
+
+                        product_data = {
+                            data_temp[i].name: {
+                                "id": data_temp[i].id,
+                                "name": data_temp[i].name,
+                                "main_photo_path": data_temp[i].main_photo_path,
+                                "category": data_temp[i].category,
+                                "description": data_temp[i].description,
+                                "manufacturer": data_temp[i].manufacturer,
+                                "orign_country": data_temp[i].orign_country,
+                                "brand": data_temp[i].brand,
+                                "colors": colors,
+                                "opt_price": data_temp[i].opt_price,
+                                "discount_price": data_temp[i].discount_price,
+                                "unit": data_temp[i].unit,
+                                "unit_storage": data_temp[i].unit_storage,
+                                "weight": data_temp[i].weight,
+                                "volume": data_temp[i].volume,
+                                "length": data_temp[i].length,
+                                "width": data_temp[i].width,
+                                "count": 1
+                            }
+                        }
+                        data.append(product_data)
+
+                    return JsonResponse({
+                        "status": True,
+                        "number_pages": ceil(number_pages),
+                        "data": data
+                    })
+
                 else:
                     iteration = int(pag) * int(page_size) - int(page_size)
                     try:
