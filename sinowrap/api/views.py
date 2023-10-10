@@ -207,7 +207,7 @@ class Position:
                         same_data.append(help_method.get_data(same, colors, rand_from_same))
 
                 if len(value) > 0: 
-                    colors = help_method.extract_colors(value, rand_from_same)
+                    colors = help_method.extract_colors(value)
                     data = help_method.get_data(value, colors, 0)
                     data["same"] = same_data
                     
