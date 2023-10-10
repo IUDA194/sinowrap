@@ -5,9 +5,13 @@ import requests
 from random import randint, sample
 from django.views.decorators.csrf import csrf_exempt
 from math import floor,ceil
+from ftplib import FTP
+import os
+
 
 #Методы предназначиные для структуризации и ускорения работы
 class help_method:
+    # Функция, которая получает значения цвета товара и генерирует нужный жсон
     def extract_colors(data, i : int = None):
         if i:
             colors_list = data[i].colors.split(";")
@@ -15,12 +19,13 @@ class help_method:
             try: colors_total = list(map(int, data[i].color_count.split(";")))
             except: colors_total = [0] * len(colors_list)
             colors = [{
-                "id" : data[i].name,
+                "color_id" : j,
+                "product_id" : data[i].id,
                 "name": colors_list[j],
                 "photo_path": colors_path[j],
                 "total": colors_total[j],
                 "opt_price": data[i].opt_price,
-                "count": 1
+                "count": 0
                 } for j in range(len(colors_list))]
             
             return colors
@@ -30,12 +35,13 @@ class help_method:
             try: colors_total = list(map(int, data[i].color_count.split(";")))
             except: colors_total = [0] * len(colors_list)
             colors = [{
-                "id" : data[i].name,
+                "color_id" : j,
+                "product_id" : data[i].id,
                 "name": colors_list[j],
                 "photo_path": colors_path[j],
                 "total": colors_total[j],
                 "opt_price": data[i].opt_price,
-                "count": 1
+                "count": 0
                 } for j in range(len(colors_list))]
             
             return colors
@@ -45,16 +51,18 @@ class help_method:
             try: colors_total = list(map(int, data.color_count.split(";")))
             except: colors_total = [0] * len(colors_list)
             colors = [{
-                "id" : data.name,
+                "color_id" : j,
+                "product_id" : data.id,
                 "name": colors_list[j],
                 "photo_path": colors_path[j],
                 "total": colors_total[j],
                 "opt_price": data.opt_price,
-                "count": 1
+                "count": 0
                 } for j in range(len(colors_list))]
             
             return colors
 
+    # Генерим шаблонный жсончик
     def get_data(data, colors : list, i : int = None ):
         result = {
                                 "id": data[i].id,
@@ -78,9 +86,31 @@ class help_method:
                         }
         return result 
 
+    def photo_dw(path : str = "/sinowrap", name : str = None) -> JsonResponse:
+            # Создайте объект FTP и установите соединение с сервером
+            ftp = FTP('st-e.server-panel.net')
+            ftp.login(user='user4681634', passwd='YSJZFbU1wukv')
+
+            # Перейдите в нужный каталог на сервере (если необходимо)
+            ftp.cwd(path)
+
+            # Откройте файл для чтения (в режиме бинарного чтения)
+            try:
+                with open(f"photo/{name}", 'wb') as file:
+                    # Скачайте файл с сервера и сохраните его на локальном компьютере
+                    ftp.retrbinary('RETR ' + name, file.write)
+            except:
+                os.mkdir("photo")
+                with open(f"photo/{name}", 'wb') as file:
+                    # Скачайте файл с сервера и сохраните его на локальном компьютере
+                    ftp.retrbinary('RETR ' + name, file.write)
+            # Закройте соединение с FTP-сервером
+            ftp.quit()
+
 #Методы связанные с товарами
 class Position:
 
+    # Основной урл для работы с моделью
     @csrf_exempt
     def main_url(request) -> JsonResponse:
         #POST -> add new position
@@ -192,6 +222,8 @@ class Position:
                 return JsonResponse({"status" : True})
             else: return JsonResponse({"status" : False}, status=403)
 
+    # Урл для получения всех значений из бд
+    @csrf_exempt
     def all_positions(request) -> JsonResponse:
         if request.method == "GET":
             pag = request.GET.get("pag")
@@ -285,6 +317,7 @@ class Position:
                 obj.delete()
             return JsonResponse({"status" : True})
 
+    # Урл для получения всех категорий из бд в удобном для фронта формате
     @csrf_exempt
     def get_all_category(request) -> JsonResponse:
         if request.method == "GET":
@@ -306,6 +339,11 @@ class Position:
                              "type" : cat, # eng  
                              "data" : temp_data})
             return JsonResponse({"status" : True, "data" : data})
+
+    def photo(request):
+        help_method.photo_dw(name="Image_20230918180106.png")
+        return render(request, "index.html", {"path" : "Image_20230918180106.png"})
+
 
 #Интеграция с битриксом (В процессе...)
 class bitrix_lid:
@@ -367,4 +405,3 @@ def add_lid_to_bitrix(request) -> JsonResponse:
             if sended['status']: return JsonResponse({"status" : True}, status = 200)
             else: return JsonResponse({"status" : False  }, status = 501)
         else: return JsonResponse({"status" : False, "text" : "Bad Request"}, status = 400)
-
