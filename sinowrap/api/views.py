@@ -21,7 +21,8 @@ class help_method:
             colors = [{
                 "color_id" : j,
                 "product_id" : data[i].id,
-                "name": colors_list[j],
+                "product_name" : data[i].name,
+                "color_name": colors_list[j],
                 "photo_path": colors_path[j],
                 "total": colors_total[j],
                 "opt_price": data[i].opt_price,
@@ -37,7 +38,8 @@ class help_method:
             colors = [{
                 "color_id" : j,
                 "product_id" : data[i].id,
-                "name": colors_list[j],
+                "product_name" : data[i].name,
+                "color_name": colors_list[j],
                 "photo_path": colors_path[j],
                 "total": colors_total[j],
                 "opt_price": data[i].opt_price,
@@ -53,7 +55,8 @@ class help_method:
             colors = [{
                 "color_id" : j,
                 "product_id" : data.id,
-                "name": colors_list[j],
+                "product_name" : data.name,
+                "color_name": colors_list[j],
                 "photo_path": colors_path[j],
                 "total": colors_total[j],
                 "opt_price": data.opt_price,
