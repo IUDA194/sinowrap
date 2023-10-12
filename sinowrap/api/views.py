@@ -89,6 +89,7 @@ class help_method:
                         }
         return result 
 
+    # Функция скачивания фото с фтп сервера
     def photo_dw(path : str = "/sinowrap", name : str = None) -> JsonResponse:
             # Создайте объект FTP и установите соединение с сервером
             ftp = FTP('st-e.server-panel.net')
@@ -109,6 +110,42 @@ class help_method:
                     ftp.retrbinary('RETR ' + name, file.write)
             # Закройте соединение с FTP-сервером
             ftp.quit()
+
+    # Класс для интергации битрикса
+    class bitrix_lid:
+        final_url = None
+        title = None
+        name = None
+        last_name = None
+        email = None
+        phone = None
+        cart = None
+
+        def __init__(self,
+                    title : str,
+                    name : str,
+                    last_name : str, 
+                    email : str,
+                    phone : str,
+                    cart : str,
+                    price : int) -> None:
+            if title and name and last_name and email and phone and cart:
+                    self.title = title
+                    self.name = name
+                    self.last_name = last_name
+                    self.email = email
+                    self.phone = phone
+                    self.cart = cart
+                    self.price = price
+
+        def send(self) -> dict:
+            url = f"https://b24-4098an.bitrix24.ru/rest/1/k5ki9yi2a4omt03n/crm.lead.add.json?FIELDS[TITLE]={self.title}&FIELDS[NAME]={self.name}&FIELDS[LAST_NAME]={self.last_name}&FIELDS[EMAIL][0][VALUE]={self.email}&FIELDS[EMAIL][0][VALUE_TYPE]=WORK&FIELDS[PHONE][0][VALUE]={self.phone}&FIELDS[PHONE][0][VALUE_TYPE]=WORK&FIELDS[OPPORTUNITY]={self.price}&FIELDS[COMMENTS]={self.cart}"
+            request_data = requests.get(url)
+            print(request_data.text)
+            if request_data.status_code == 200 or request_data.status_code == "200":
+                return {"status" : True}
+            else: return {"status" : False, "code" : request_data.status_code}
+
 
 #Методы связанные с товарами
 class Position:
@@ -349,62 +386,29 @@ class Position:
 
 
 #Интеграция с битриксом (В процессе...)
-class bitrix_lid:
-    final_url = None
-    title = None
-    name = None
-    last_name = None
-    email = None
-    phone = None
-    cart = None
+class Bitrix:
 
-    def __init__(self,
-                 title : str,
-                 name : str,
-                 last_name : str, 
-                 email : str,
-                 phone : str,
-                 cart : str) -> None:
-        if title and name and last_name and email and phone and cart:
-            if type(cart) == list:
-                self.title = title
-                self.name = name
-                self.last_name = last_name
-                self.email = email
-                self.email = phone
-                self.cart = cart
-            else: 
-                self.title = title
-                self.name = name
-                self.last_name = last_name
-                self.email = email
-                self.phone = phone
-                self.cart = "Пусто"
-
-    def send(self) -> dict:
-        url = f"https://b24-haqtxw.bitrix24.ru/rest/1/tezbmobj4wl89l2y/crm.lead.add.json?FIELDS[TITLE]={self.title}&FIELDS[NAME]={self.name}&FIELDS[LAST_NAME]={self.last_name}&FIELDS[EMAIL][0][VALUE]={self.email}&FIELDS[EMAIL][0][VALUE_TYPE]=PERSONAL&FIELDS[PHONE][0][VALUE]={self.phone}&FIELDS[PHONE][0][VALUE_TYPE]=PERSONAL&FIELDS[COMMENTS]={self.cart}"
-        request_data = requests.get(url)
-        if request_data.status_code == 200 or request_data.status_code == "200":
-            return {"status" : True}
-        else: return {"status" : False, "code" : request_data.status_code}
-
-def add_lid_to_bitrix(request) -> JsonResponse:
-    if request.method == "POST": 
-        request_data = request.POST
-        data = {"name" : request_data.get("name"), 
-                "title" : request_data.get("title"), 
-                "last_name" : request_data.get("last_name"),
-                "email" : request_data.get("email"),
-                "phone" : request_data.get("phone"),
-                "cart" : request_data.get("cart")}
-        if data["title"] and data["name"] and data["last_name"] and data["email"] and data['phone'] and data['cart']:
-            lid = bitrix_lid(title=data["title"], 
-                             name=data["name"], 
-                             last_name=data["last_name"], 
-                             email=data['email'],
-                             phone=data['phone'],
-                             cart=data["cart"])
-            sended = lid.send()
-            if sended['status']: return JsonResponse({"status" : True}, status = 200)
-            else: return JsonResponse({"status" : False  }, status = 501)
-        else: return JsonResponse({"status" : False, "text" : "Bad Request"}, status = 400)
+    # Основной урл для работы с битриксом
+    @csrf_exempt
+    def url(request) -> JsonResponse:
+        if request.method == "POST": 
+            request_data = request.POST
+            data = {"name" : request_data.get("name"), 
+                    "title" : request_data.get("title"), 
+                    "last_name" : request_data.get("last_name"),
+                    "email" : request_data.get("email"),
+                    "phone" : request_data.get("phone"),
+                    "cart" : request_data.get("cart"),
+                    "price" : request_data.get("price")}
+            if data['phone'] and data['cart']:
+                lid = help_method.bitrix_lid(title=data["title"], 
+                                name=data["name"], 
+                                last_name=data["last_name"], 
+                                email=data['email'],
+                                phone=data['phone'],
+                                cart=data["cart"],
+                                price=int(data["price"]))
+                sended = lid.send()
+                if sended['status']: return JsonResponse({"status" : True}, status = 200)
+                else: return JsonResponse({"status" : False  }, status = 501)
+            else: return JsonResponse({"status" : False, "text" : "Bad Request"}, status = 400)
