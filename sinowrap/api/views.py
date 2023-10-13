@@ -67,12 +67,12 @@ class help_method:
 
     # Генерим шаблонный жсончик
     def get_data(data, colors : list, i : int = None ):
-        paths = [data[i]["photo_path"] for color in colors]
+        paths = [color["photo_path"] for color in colors]
         paths.insert(0, data[i].main_photo_path)
         result = {
                                 "id": data[i].id,
                                 "name": data[i].name,
-                                "main_photo_path": paths,
+                                "main_photo_path": paths[:4] ,
                                 "category": data[i].category,
                                 "description": data[i].description,
                                 "manufacturer": data[i].manufacturer,
@@ -143,7 +143,6 @@ class help_method:
         def send(self) -> dict:
             url = f"https://b24-4098an.bitrix24.ru/rest/1/k5ki9yi2a4omt03n/crm.lead.add.json?FIELDS[TITLE]={self.title}&FIELDS[NAME]={self.name}&FIELDS[LAST_NAME]={self.last_name}&FIELDS[EMAIL][0][VALUE]={self.email}&FIELDS[EMAIL][0][VALUE_TYPE]=WORK&FIELDS[PHONE][0][VALUE]={self.phone}&FIELDS[PHONE][0][VALUE_TYPE]=WORK&FIELDS[OPPORTUNITY]={self.price}&FIELDS[COMMENTS]={self.cart}"
             request_data = requests.get(url)
-            print(request_data.text)
             if request_data.status_code == 200 or request_data.status_code == "200":
                 return {"status" : True}
             else: return {"status" : False, "code" : request_data.status_code}
@@ -231,7 +230,6 @@ class Position:
                 if len(same) >= same_n:
                     rand_positions = sample(range(0, len(same)), same_n)
                     for rand_from_same in rand_positions:
-                        print(rand_from_same, rand_positions)
                         colors = help_method.extract_colors(same, rand_from_same)
 
                         same_data.append(help_method.get_data(same, colors, rand_from_same))
@@ -280,7 +278,7 @@ class Position:
                     paths.insert(0, obj.main_photo_path)
                     data.append({           "id" : obj.id,
                                             "name" : obj.name,
-                                            "main_photo_path" : paths,
+                                            "main_photo_path" : paths[:4],
                                             "category" : obj.category,
                                             "description" : obj.description,
                                             "manufacturer" : obj.manufacturer,
@@ -376,7 +374,6 @@ class Position:
                 same = position.objects.filter(category=cat)
                 rand_positions = sample(range(0, len(same)), 3)
                 for rand_from_same in rand_positions:
-                    print(not 1)
                     colors = help_method.extract_colors(same, rand_from_same)
                     temp_data.append(help_method.get_data(same, colors, rand_from_same))
                 data.append({"name" : cat,
