@@ -71,7 +71,7 @@ class help_method:
         result = {
                                 "id": data[i].id,
                                 "name": data[i].name,
-                                "main_photo_path": [color["photo_path"] for color in colors],
+                                "main_photo_path": [color["photo_path"] for color in colors].insert(0, data[i].main_photo_path),
                                 "category": data[i].category,
                                 "description": data[i].description,
                                 "manufacturer": data[i].manufacturer,
@@ -277,7 +277,7 @@ class Position:
                     colors = help_method.extract_colors(obj)
                     data.append({           "id" : obj.id,
                                             "name" : obj.name,
-                                            "main_photo_path" : [color['photo_path'] for color in colors],
+                                            "main_photo_path" : [color["photo_path"] for color in colors].insert(0, obj.main_photo_path),
                                             "category" : obj.category,
                                             "description" : obj.description,
                                             "manufacturer" : obj.manufacturer,
