@@ -67,10 +67,11 @@ class help_method:
 
     # Генерим шаблонный жсончик
     def get_data(data, colors : list, i : int = None ):
+        
         result = {
                                 "id": data[i].id,
                                 "name": data[i].name,
-                                "main_photo_path": data[i].main_photo_path,
+                                "main_photo_path": [color.photo_path for color in colors],
                                 "category": data[i].category,
                                 "description": data[i].description,
                                 "manufacturer": data[i].manufacturer,
