@@ -275,9 +275,9 @@ class Position:
                 else: data_temp = position.objects.filter(category=category)
                 for obj in data_temp:
                     colors = help_method.extract_colors(obj)
-                    data.append({"id" : obj.id,
+                    data.append({           "id" : obj.id,
                                             "name" : obj.name,
-                                            "main_photo_path" : obj.main_photo_path,
+                                            "main_photo_path" : [color.photo_path for color in colors],
                                             "category" : obj.category,
                                             "description" : obj.description,
                                             "manufacturer" : obj.manufacturer,
