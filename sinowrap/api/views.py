@@ -381,9 +381,22 @@ class Position:
                              "data" : temp_data})
             return JsonResponse({"status" : True, "data" : data})
 
-    def photo(request):
-        help_method.photo_dw(name="Image_20230918180106.png")
-        return render(request, "index.html", {"path" : "Image_20230918180106.png"})
+    def get_random_id(request) -> JsonResponse:
+        if request.method == "GET":
+            number = request.GET.get("count")
+            if not number: number = 1
+
+            data = position.objects.all()
+
+            rand_index = sample(range(0, len(data)), int(number))
+
+            result_list = []
+
+            for i in rand_index:
+                colors = help_method.extract_colors(data, i)
+                result_list.append(help_method.get_data(data, colors, i))
+
+            return JsonResponse({"status" : True, "data" : result_list})
 
 
 #Интеграция с битриксом (В процессе...)
