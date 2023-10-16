@@ -67,8 +67,10 @@ class help_method:
 
     # Генерим шаблонный жсончик
     def get_data(data, colors : list, i : int = None ):
+        empty_url = "XXF-002-1.jpg"
         paths = [color["photo_path"] for color in colors]
         paths.insert(0, data[i].main_photo_path)
+        if len(paths) < 4: [paths.append(empty_url) for i in range(4 - len(paths))]
         result = {
                                 "id": data[i].id,
                                 "name": data[i].name,
@@ -276,6 +278,8 @@ class Position:
                     colors = help_method.extract_colors(obj)
                     paths = [color["photo_path"] for color in colors]
                     paths.insert(0, obj.main_photo_path)
+                    empty_url = "XXF-002-1.jpg"
+                    if len(paths) < 4: [paths.append(empty_url) for i in range(4 - len(paths))]
                     data.append({           "id" : obj.id,
                                             "name" : obj.name,
                                             "main_photo_path" : paths[:4],
