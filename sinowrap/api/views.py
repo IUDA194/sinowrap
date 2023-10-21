@@ -376,8 +376,8 @@ class Position:
             for cat in category:
                 temp_data = []
                 same = position.objects.filter(category=cat)
-                if len(same) == 3: rand_positions = [1,2,2]
-                elif len(same) <= 2: rand_positions = [0,0,0]
+                if len(same) == 3: rand_positions = [0,1,2]
+                elif len(same) <= 2: rand_positions = [0]
                 else: rand_positions = sample(range(0, len(same)), 3)
                 for rand_from_same in rand_positions:
                     colors = help_method.extract_colors(same, rand_from_same)
