@@ -1,6 +1,7 @@
 from django.db import models
 
 class position(models.Model):
+    id = models.ObjectIdField(primary_key=True, default=ObjectId, editable=False)
     name = models.TextField(max_length=228, default="Не указанно")
     main_photo_path = models.TextField(max_length=1028, default="Не указанно")
     description = models.TextField(max_length=1028, default="Не указанно")
