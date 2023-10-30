@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = ["185.107.237.179", "127.0.0.1", "sinowrap.online", "www.sinowrap.online"]
 
 CORS_ALLOWED_ORIGINS = [
-    'https://*',
+    '*',
 ]
 # Application definition
 
@@ -142,7 +142,7 @@ CORS_ALLOW_HEADERS = ('content-disposition', 'accept-encoding',
                       'access-control-allow-methods')
 
 CORS_ORIGIN_WHITELIST = [
-    'sinowrap.ru',
+    "*"
 ]
 
 # Default primary key field type
