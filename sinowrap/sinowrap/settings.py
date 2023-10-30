@@ -10,7 +10,7 @@ SECRET_KEY = 'django-insecure-m8&az+1(!cfpivvkor5ow=avs)itx_hv8fq%o_seg2yc#$qf+5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["185.107.237.179", "127.0.0.1", "sinowrap.online", "www.sinowrap.online"]
+ALLOWED_HOSTS = ["185.107.237.179", "89.105.201.25" , "127.0.0.1", "sinowrap.online", "www.sinowrap.online"]
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
