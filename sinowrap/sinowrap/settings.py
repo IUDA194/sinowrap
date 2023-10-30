@@ -147,8 +147,12 @@ CORS_ALLOW_HEADERS = ('content-disposition', 'accept-encoding',
                       'access-control-allow-methods')
 
 CORS_ORIGIN_WHITELIST = [
-    "*"
+    'http://localhost:3000',
+    'https://sinowrap.online',
+    'https://sinowrap.ru',
+    # ... other origins
 ]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
