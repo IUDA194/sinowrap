@@ -89,7 +89,8 @@ class help_method:
                                 "volume": data[i].volume,
                                 "length": data[i].length,
                                 "width": data[i].width,
-                                "count": 1
+                                "count": 1,
+                                "article" : data[i].articul
                         }
         return result 
 
@@ -175,6 +176,7 @@ class Position:
                request_data.get("weight") and\
                request_data.get("volume") and\
                request_data.get("length") and\
+               request_data.get("article") and\
                request_data.get("width"):
                 data = {
                     "name" : request_data.get("name"),
@@ -194,7 +196,8 @@ class Position:
                     "volume" : request_data.get("volume"), 
                     "length" : request_data.get("length"),
                     "color_count" : request_data.get("color_count"),
-                    "width" : request_data.get("width")
+                    "width" : request_data.get("width"),
+                    "articul" : request_data.get("article")
                 }
 
                 position.objects.create(name = data['name'],
@@ -214,6 +217,7 @@ class Position:
                                         volume = data['volume'],
                                         length = data['length'],
                                         color_count = data['color_count'],
+                                        articul = data['articul'],
                                         width = data['width']).save()
                 return JsonResponse({"status" : True})
             else:
