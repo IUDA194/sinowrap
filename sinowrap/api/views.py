@@ -390,6 +390,30 @@ class Position:
                              "type" : cat, # eng  
                              "data" : temp_data})
             return JsonResponse({"status" : True, "data" : data})
+        
+    # Дле генирации прайс листа
+    @csrf_exempt
+    def get_all_category_for_price_list(request) -> JsonResponse:
+        if request.method == "GET":
+            data = []
+            all_positions = position.objects.all()
+            category = []
+            for positionn in all_positions:
+                category.append(positionn.category)
+            category = list(set(category))
+            for cat in category:
+                temp_data = []
+                same = position.objects.filter(category=cat)
+                if len(same) == 3: rand_positions = [0,1,2]
+                elif len(same) <= 2: rand_positions = [0]
+                else: rand_positions = sample(range(0, len(same)), 3)
+                for rand_from_same in range(len(same)):
+                    colors = help_method.extract_colors(same, rand_from_same)
+                    temp_data.append(help_method.get_data(same, colors, rand_from_same))
+                data.append({"name" : cat,
+                             "type" : cat, # eng  
+                             "data" : temp_data})
+            return JsonResponse({"status" : True, "data" : data})
 
     def get_random_id(request) -> JsonResponse:
         if request.method == "GET":

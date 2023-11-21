@@ -6,5 +6,6 @@ urlpatterns = [
     path("positions/all", Position.all_positions),
     path("positions/category", Position.get_all_category),
     path("positions/random", Position.get_random_id),
+    path("positions/random/price", Position.get_all_category_for_price_list),
     path("buy/", Bitrix.url)
 ]
