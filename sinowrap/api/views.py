@@ -71,7 +71,7 @@ class help_method:
         paths = [color["photo_path"] for color in colors]
         paths.insert(0, data[i].main_photo_path)
         if len(paths) < 4: [paths.append(empty_url) for i in range(4 - len(paths))]
-        if len(paths[1:][:4]) >= 4: path = paths[1:][:4]
+        if len(paths[1:][:5]) >= 4: path = paths[1:][:4]
         else: path = paths[:4]
         result = {
                                 "id": data[i].id,
@@ -286,7 +286,7 @@ class Position:
                     paths.insert(0, obj.main_photo_path)
                     empty_url = "XXF-002-1.jpg"
                     if len(paths) < 4: [paths.append(empty_url) for i in range(4 - len(paths))]
-                    if len(paths[1:][:4]) >= 4: path = paths[1:][:4]
+                    if len(paths[1:][:5]) >= 4: path = paths[1:][:4]
                     else: path = paths[:4]
                     data.append({           
                                                 "id" : obj.id,
