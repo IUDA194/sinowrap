@@ -74,7 +74,7 @@ class help_method:
         result = {
                                 "id": data[i].id,
                                 "name": data[i].name,
-                                "main_photo_path": paths[:4] ,
+                                "main_photo_path": paths[1:][:4] ,
                                 "category": data[i].category,
                                 "description": data[i].description,
                                 "manufacturer": data[i].manufacturer,
@@ -286,7 +286,7 @@ class Position:
                     if len(paths) < 4: [paths.append(empty_url) for i in range(4 - len(paths))]
                     data.append({           "id" : obj.id,
                                             "name" : obj.name,
-                                            "main_photo_path" : paths[:4],
+                                            "main_photo_path" : paths[1:][:4],
                                             "category" : obj.category,
                                             "description" : obj.description,
                                             "manufacturer" : obj.manufacturer,
