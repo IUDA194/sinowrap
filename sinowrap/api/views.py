@@ -71,10 +71,12 @@ class help_method:
         paths = [color["photo_path"] for color in colors]
         paths.insert(0, data[i].main_photo_path)
         if len(paths) < 4: [paths.append(empty_url) for i in range(4 - len(paths))]
+        if len(paths) < 4: path = paths[1:][:4]
+        else: path = paths[:4]
         result = {
                                 "id": data[i].id,
                                 "name": data[i].name,
-                                "main_photo_path": paths[1:][:4] ,
+                                "main_photo_path": path,
                                 "category": data[i].category,
                                 "description": data[i].description,
                                 "manufacturer": data[i].manufacturer,
@@ -284,25 +286,28 @@ class Position:
                     paths.insert(0, obj.main_photo_path)
                     empty_url = "XXF-002-1.jpg"
                     if len(paths) < 4: [paths.append(empty_url) for i in range(4 - len(paths))]
-                    data.append({           "id" : obj.id,
-                                            "name" : obj.name,
-                                            "main_photo_path" : paths[1:][:4],
-                                            "category" : obj.category,
-                                            "description" : obj.description,
-                                            "manufacturer" : obj.manufacturer,
-                                            "orign_country" : obj.orign_country,
-                                            "brand" : obj.brand,
-                                            "colors" : colors,
-                                            "opt_price" : obj.opt_price,
-                                            "discount_price" : obj.discount_price,
-                                            "unit" : obj.unit,
-                                            "unit_storage" : obj.unit_storage,
-                                            "weight" : obj.weight,
-                                            "volume" : obj.volume,
-                                            "length" : obj.length,
-                                            "width" : obj.width,
-                                            "count" : 1 
-                                            })
+                    if len(paths) < 4: path = paths[1:][:4]
+                    else: path = paths[:4]
+                    data.append({           
+                                                "id" : obj.id,
+                                                "name" : obj.name,
+                                                "main_photo_path" : path,
+                                                "category" : obj.category,
+                                                "description" : obj.description,
+                                                "manufacturer" : obj.manufacturer,
+                                                "orign_country" : obj.orign_country,
+                                                "brand" : obj.brand,
+                                                "colors" : colors,
+                                                "opt_price" : obj.opt_price,
+                                                "discount_price" : obj.discount_price,
+                                                "unit" : obj.unit,
+                                                "unit_storage" : obj.unit_storage,
+                                                "weight" : obj.weight,
+                                                "volume" : obj.volume,
+                                                "length" : obj.length,
+                                                "width" : obj.width,
+                                                "count" : 1 
+                                                })
                 return JsonResponse({"status" : True, "data": data})
             elif pag:
                 page_size = request.GET.get("page_size")
