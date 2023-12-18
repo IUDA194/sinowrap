@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from api.models import position
 import requests
+from rest_framework import permissions, viewsets, generics
+from api.serializers import position_serializers
 from random import randint, sample
 from django.views.decorators.csrf import csrf_exempt
 from math import floor,ceil
@@ -151,6 +153,15 @@ class help_method:
             if request_data.status_code == 200 or request_data.status_code == "200":
                 return {"status" : True}
             else: return {"status" : False, "code" : request_data.status_code}
+
+class DRF_viewSet(generics.ListCreateAPIView):
+    serializer_class = position_serializers
+    queryset = position.objects.all()
+
+
+class DRF_viewSet_smart(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = position_serializers
+    queryset = position.objects.all()
 
 
 #Методы связанные с товарами
