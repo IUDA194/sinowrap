@@ -4,7 +4,7 @@ from dotenv import find_dotenv, load_dotenv
 from api.models import position
 import requests
 from rest_framework import permissions, viewsets, generics, response
-from api.serializers import position_serializers
+from api.serializers import position_serializers, image_serializers
 from random import randint, sample
 from django.views.decorators.csrf import csrf_exempt
 from math import floor,ceil
@@ -476,6 +476,7 @@ class Bitrix:
             else: return JsonResponse({"status" : False, "text" : "Bad Request"}, status = 400)
 
 class collect_static(generics.GenericAPIView):
+    serializer_class = image_serializers
     def post(self, request):
         load_dotenv(find_dotenv())
 

@@ -23,3 +23,8 @@ class position_serializers(serializers.ModelSerializer):
                   "length",
                   "width",
                   "color_count"]
+        
+
+class image_serializers(serializers.ModelSerializer):
+    image = serializers.CharField()
+    name = serializers.CharField()
