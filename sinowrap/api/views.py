@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from dotenv import find_dotenv, load_dotenv
 from api.models import position
 import requests
-from rest_framework import permissions, viewsets, generics
+from rest_framework import permissions, viewsets, generics, response
 from api.serializers import position_serializers
 from random import randint, sample
 from django.views.decorators.csrf import csrf_exempt
@@ -158,11 +159,9 @@ class DRF_viewSet(generics.ListCreateAPIView):
     serializer_class = position_serializers
     queryset = position.objects.all()
 
-
 class DRF_viewSet_smart(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = position_serializers
     queryset = position.objects.all()
-
 
 #Методы связанные с товарами
 class Position:
@@ -448,7 +447,6 @@ class Position:
 
             return JsonResponse({"status" : True, "data" : result_list})
 
-
 #Интеграция с битриксом (В процессе...)
 class Bitrix:
 
@@ -476,3 +474,17 @@ class Bitrix:
                 if sended['status']: return JsonResponse({"status" : True}, status = 200)
                 else: return JsonResponse({"status" : False  }, status = 501)
             else: return JsonResponse({"status" : False, "text" : "Bad Request"}, status = 400)
+
+class collect_static(generics.GenericAPIView):
+    def post(self, request):
+        load_dotenv(find_dotenv())
+
+        PHOTO_FOLDER_PATH = os.getenv("PHOTO_FOLDER_PATH")
+
+        uploaded_image = request.FILES['image']
+        uploaded_image_name = request.GET.get("name")
+
+        with open(f'{PHOTO_FOLDER_PATH}{uploaded_image_name}.png', 'wb') as destination:
+            for chunk in uploaded_image.chunks():
+                destination.write(chunk)
+            return response.Response(destination.name)
