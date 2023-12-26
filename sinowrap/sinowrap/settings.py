@@ -113,18 +113,17 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 APPEND_SLASH=False
-CORS_ORIGIN_ALLOW_ALL = True   
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3030',
+    'http://sinowrap.ru',
+]
 CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOW_HEADERS = ('content-disposition', 'accept-encoding',
-                      'content-type', 'accept', 'origin', 'Authorization',
-                      'access-control-allow-methods')
-
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = ('access-control-allow-methods')
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
     'http://localhost:3030',
+    'http://sinowrap.ru',
 ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
