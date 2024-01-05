@@ -1,3 +1,7 @@
 venv
 __pycache__
 photo
+.env
+*.png
+ftp_static.py
+*.sqlite3
