@@ -536,7 +536,7 @@ class rename_static():
             except Exception as e:
                 print("Произошла ошибка:", str(e))
 
-        folder_path = "/Users/aroslavgladkij/Documents/GitHub/sinowrap/sinowrap/photo"
+        folder_path = "/home/sinowrap/sinowrap/photo"
 
         # Вызываем функцию с указанным путем
         rename_files_in_order(folder_path)
