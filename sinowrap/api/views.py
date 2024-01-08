@@ -494,51 +494,19 @@ class rename_static():
     def main_url(request):
         all_p = position.objects.all()
 
-        def rename_files_in_order(folder_path):
-            try:
-                # Получаем список файлов в указанной папке
-                file_list = os.listdir(folder_path)
-                
-                # Сортируем список файлов
-                file_list.sort()
+        for positionn in all_p:
 
-                # Переименовываем файлы по порядку
-                for index, file_name in enumerate(file_list, start=1):
-                    # Получаем расширение файла
-                    _, file_extension = os.path.splitext(file_name)
+            if not ".png" in positionn.main_photo_path:
+                positionn.main_photo_path = positionn.main_photo_path + ".png"
 
-                    # Создаем новое имя файла
-                    new_file_name = "{}{}".format(index, file_extension)
-                    all_obj = position.objects.all()
+            temp_value = ""
+            
 
-                    for i in all_obj:
-                        if i.main_photo_path == file_name:
-                            i.main_photo_path = new_file_name
-                            i.save()
-                        if file_name in i.colors_photo_path:
-                            print(i.colors_photo_path)
-                            i.colors_photo_path = i.colors_photo_path.replace(file_name, new_file_name)
-                            i.save()
-                    # Формируем полный путь для старого и нового имени
-                    old_file_path = os.path.join(folder_path, file_name)
-                    new_file_path = os.path.join(folder_path, new_file_name)
+            for i in positionn.colors_photo_path.split(";"):
+                if len(i) >= 2:
+                    if not ".png" in i: temp_value += i + ".png;"
+                    else: temp_value += i + ";"
+            positionn.colors_photo_path = temp_value
 
-                    # Переименовываем файл
-                    os.rename(old_file_path, new_file_path)
-
-                    # Выводим информацию о переименовании
-                    print("Переименован файл: {} -> {}".format(file_name, new_file_name))
-
-                print("Переименование завершено.")
-                    
-            except FileNotFoundError:
-                print("Указанная папка не найдена.")
-            except Exception as e:
-                print("Произошла ошибка:", str(e))
-
-        folder_path = "/home/sinowrap/sinowrap/photo"
-
-        # Вызываем функцию с указанным путем
-        rename_files_in_order(folder_path)
-
+            positionn.save()
         return JsonResponse({"Status" : True})
