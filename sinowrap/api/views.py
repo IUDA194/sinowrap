@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from dotenv import find_dotenv, load_dotenv
-from api.models import position
+from api.models import position, category
 import requests
 from rest_framework import permissions, viewsets, generics, response
-from api.serializers import position_serializers, image_serializers
+from api.serializers import CategorySerializer, position_serializers, image_serializers
 from random import randint, sample
 from django.views.decorators.csrf import csrf_exempt
 from math import floor,ceil
@@ -510,3 +510,8 @@ class rename_static():
 
             positionn.save()
         return JsonResponse({"Status" : True})
+
+
+class CategoryCreateView(generics.CreateAPIView):
+    queryset = category.objects.all()
+    serializer_class = CategorySerializer

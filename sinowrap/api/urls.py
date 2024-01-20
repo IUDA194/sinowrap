@@ -1,5 +1,5 @@
 from django.urls import path
-from api.views import Position, Bitrix, DRF_viewSet, DRF_viewSet_smart, collect_static, rename_static
+from api.views import Position, Bitrix, DRF_viewSet, DRF_viewSet_smart, collect_static, rename_static, CategoryCreateView
 
 urlpatterns = [
     path("position/", DRF_viewSet.as_view()),
@@ -12,4 +12,5 @@ urlpatterns = [
     path("positions/random/price", Position.get_all_category_for_price_list),
     path("buy/", Bitrix.url),
     path("rename/", rename_static.main_url),
+    path("category/", CategoryCreateView.as_view())
 ]
