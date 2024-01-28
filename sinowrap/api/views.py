@@ -64,9 +64,9 @@ class help_method:
                 "product_name" : data.name,
                 "color_name": colors_list[j],
                 "photo_path": colors_path[j],
-                "total": colors_total[j],
+                "count": colors_total[j],
                 "opt_price": data.opt_price,
-                "count": colors_count[j]
+                "total": colors_count[j]
                 } for j in range(len(colors_list))]
             
             return colors
