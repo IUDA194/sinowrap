@@ -36,6 +36,7 @@ class help_method:
         elif i == 0:
             colors_list = data[i].colors.split(";")
             colors_path = data[i].colors_photo_path.split(";")
+            colors_count = data[i].color_count.split(";")
             try: colors_total = list(map(int, data[i].color_count.split(";")))
             except: colors_total = [0] * len(colors_list)
             colors = [{
@@ -46,7 +47,7 @@ class help_method:
                 "photo_path": colors_path[j],
                 "total": colors_total[j],
                 "opt_price": data[i].opt_price,
-                "count": 0
+                "count": colors_count[j]
                 } for j in range(len(colors_list))]
             
             return colors
