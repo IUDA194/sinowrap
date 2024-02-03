@@ -518,3 +518,7 @@ class rename_static():
 class CategoryCreateView(generics.CreateAPIView):
     queryset = category.objects.all()
     serializer_class = CategorySerializer
+
+class CategoryAPIView(generics.ListCreateAPIView):
+    queryset = category.objects.all()
+    serializer_class = CategorySerializer
