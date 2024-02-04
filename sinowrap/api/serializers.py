@@ -32,10 +32,11 @@ class image_serializers(serializers.Serializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     super_category_inner = serializers.ListField(child=serializers.CharField(), write_only=True)
+    subcategories = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = category
-        fields = ['super_category_name', 'super_category_inner']
+        fields = ['super_category_name', 'super_category_inner', "subcategories"]
 
     def create(self, validated_data):
         super_category_inner = validated_data.pop('super_category_inner', [])
@@ -43,3 +44,10 @@ class CategorySerializer(serializers.ModelSerializer):
         instance.super_category_inner = ';'.join(super_category_inner)
         instance.save()
         return instance
+
+    def get_subcategories(self, obj):
+            # Тут ви можете додати логіку для отримання підкатегорій,
+            # якщо вони також є моделями Django та мають відповідні серіалізатори
+            # У цьому прикладі ми просто розбиваємо поле super_category_inner на список
+            subcategories = obj.super_category_inner.split(';')
+            return [{'subcategory_name': name} for name in subcategories]
