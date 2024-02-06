@@ -520,5 +520,6 @@ class CategoryCreateView(generics.CreateAPIView):
     serializer_class = CategorySerializer
 
 class CategoryAPIView(generics.ListCreateAPIView):
+    permission_classes = [permissions.AllowAny]
     queryset = category.objects.all()
     serializer_class = CategorySerializer
