@@ -328,12 +328,12 @@ class Position:
                 data = []
                 if not category: data_temp = position.objects.all()
                 else: data_temp = position.objects.filter(category=category)
-                data_temp_len = len(position.objects.all())
-                number_pages = data_temp_len / int(page_size)
+                number_pages = len(data_temp) / int(page_size)
+                print(number_pages)
                 if floor(number_pages) >= int(pag):
                     start_index = int(pag) * int(page_size) - int(page_size)
                     end_index = int(page_size) * int(pag)
-
+                    print(int(pag))
                     data = []
 
                     for i in range(start_index, end_index):
@@ -348,7 +348,7 @@ class Position:
                                         "total_pages": ceil(number_pages),
                                         "page" : ceil(number_pages),
                                         "next" : int(pag) < ceil(number_pages),
-                                        "previous" : int(pag) >= ceil(number_pages),
+                                        "previous" : int(pag) > 0,
                                         "data" : data})
                 else:
                     try:
