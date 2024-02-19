@@ -55,7 +55,6 @@ class CategorySerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         if data['subcategories'] is None:
-            del data['super_category_name']
-            del data['subcategories']
-            return ''
+            data['super_category_name'] = ""
+            data['subcategories'] = ""
         return data
