@@ -36,7 +36,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = category
-        fields = ['super_category_name', 'super_category_inner', "subcategories"]
+        fields = ['super_category_inner', "subcategories"]
 
     def create(self, validated_data):
         super_category_inner = validated_data.pop('super_category_inner', [])
