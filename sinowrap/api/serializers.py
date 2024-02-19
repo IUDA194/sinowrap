@@ -57,4 +57,5 @@ class CategorySerializer(serializers.ModelSerializer):
         if data['subcategories'] is None:
             del data['super_category_name']
             del data['subcategories']
+            return ''
         return data
