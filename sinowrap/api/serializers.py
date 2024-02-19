@@ -36,7 +36,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = category
-        fields = ['super_category_inner', "subcategories"]
+        fields = ['super_category_name', 'super_category_inner', "subcategories"]
 
     def create(self, validated_data):
         super_category_inner = validated_data.pop('super_category_inner', [])
@@ -44,10 +44,17 @@ class CategorySerializer(serializers.ModelSerializer):
         instance.super_category_inner = ';'.join(super_category_inner)
         instance.save()
         return instance
-
+    
     def get_subcategories(self, obj):
-            # Тут ви можете додати логіку для отримання підкатегорій,
-            # якщо вони також є моделями Django та мають відповідні серіалізатори
-            # У цьому прикладі ми просто розбиваємо поле super_category_inner на список
+        # Фильтруем только подкатегории, если это не главная категория
+        if obj.super_category_name != "Main category name":
             subcategories = obj.super_category_inner.split(';')
             return [{'subcategory_name': name} for name in subcategories]
+        return None  # Возвращаем None для главной категории
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if data['subcategories'] is None:
+            del data['super_category_name']
+            del data['subcategories']
+        return data
