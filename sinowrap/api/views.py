@@ -10,6 +10,8 @@ from random import randint, sample
 from django.views.decorators.csrf import csrf_exempt
 from math import floor,ceil
 from ftplib import FTP
+from rest_framework.views import APIView
+from rest_framework.response import Response
 import os
 from django.db.models import Count
 
@@ -537,3 +539,10 @@ class DeleteNonUniqueNamesView(View):
                 record.delete()
 
         return HttpResponse("Non-unique names deleted successfully!")
+
+class DeleteAllCategoriesAPIView(APIView):
+    permission_classes = [permissions.IsAdminUser]
+
+    def delete(self, request, format=None):
+        category.objects.all().delete()
+        return Response({"message": "All categories have been deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
