@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
+from django.views import View
 from dotenv import find_dotenv, load_dotenv
 from api.models import position, category
 import requests
@@ -10,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from math import floor,ceil
 from ftplib import FTP
 import os
+from django.db.models import Count
 
 
 #Методы предназначиные для структуризации и ускорения работы
@@ -523,3 +525,15 @@ class CategoryAPIView(generics.ListCreateAPIView):
     permission_classes = [permissions.AllowAny]
     queryset = category.objects.all()
     serializer_class = CategorySerializer
+
+class DeleteNonUniqueNamesView(View):
+    def get(self, request):
+        non_unique_names = category.objects.values('super_category_name').annotate(name_count=Count('super_category_name')).filter(name_count__gt=1)
+        
+        for item in non_unique_names:
+            duplicate_records = category.objects.filter(super_category_name=item['super_category_name'])
+            # Оставляем одну запись, удаляем остальные
+            for record in duplicate_records[1:]:
+                record.delete()
+
+        return HttpResponse("Non-unique names deleted successfully!")

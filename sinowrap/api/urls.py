@@ -1,5 +1,5 @@
 from django.urls import path
-from api.views import Position, Bitrix, DRF_viewSet, DRF_viewSet_smart, collect_static, rename_static, CategoryCreateView, CategoryAPIView
+from api.views import Position, Bitrix, DRF_viewSet, DRF_viewSet_smart, collect_static, rename_static, CategoryCreateView, CategoryAPIView, DeleteNonUniqueNamesView
 
 urlpatterns = [
     path("position/", DRF_viewSet.as_view()),
@@ -13,5 +13,6 @@ urlpatterns = [
     path("buy/", Bitrix.url),
     path("rename/", rename_static.main_url),
     path("category/", CategoryCreateView.as_view()),
-    path("category-list/", CategoryAPIView.as_view())
+    path("category-list/", CategoryAPIView.as_view()),
+    path("uc/", DeleteNonUniqueNamesView.as_view())
 ]
