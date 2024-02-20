@@ -541,8 +541,6 @@ class DeleteNonUniqueNamesView(View):
         return HttpResponse("Non-unique names deleted successfully!")
 
 class DeleteAllCategoriesAPIView(APIView):
-    permission_classes = [permissions.IsAdminUser]
-
     def delete(self, request, format=None):
         category.objects.all().delete()
-        return Response({"message": "All categories have been deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "All categories have been deleted successfully."}, status=204)
