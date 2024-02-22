@@ -23,6 +23,7 @@ class help_method:
         if i:
             colors_list = data[i].colors.split(";")
             colors_path = data[i].colors_photo_path.split(";")
+            print(colors_list)
             try: colors_total = list(map(int, data[i].color_count.split(";")))
             except: colors_total = [0] * len(colors_list)
             colors = [{
@@ -41,7 +42,6 @@ class help_method:
             colors_list = data[i].colors.split(";")
             colors_path = data[i].colors_photo_path.split(";")
             colors_count = data[i].color_count.split(";")
-            print(colors_count)
             try: colors_total = list(map(int, data[i].color_count.split(";")))
             except: colors_total = [0] * len(colors_list)
             colors = [{
@@ -54,7 +54,7 @@ class help_method:
                 "opt_price": data[i].opt_price,
                 "total": colors_count[j]
                 } for j in range(len(colors_list))]
-            
+
             return colors
         else:
             colors_list = data.colors.split(";")
@@ -92,7 +92,7 @@ class help_method:
                                 "manufacturer": data[i].manufacturer,
                                 "orign_country": data[i].orign_country,
                                 "brand": data[i].brand,
-                                "colors": colors[1:],
+                                "colors": colors,
                                 "opt_price": data[i].opt_price,
                                 "discount_price": data[i].discount_price,
                                 "unit": data[i].unit,
