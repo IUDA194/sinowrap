@@ -156,7 +156,7 @@ class help_method:
                     self.price = price
 
         def send(self) -> dict:
-            url = f"https://b24-4098an.bitrix24.ru/rest/1/k5ki9yi2a4omt03n/crm.lead.add.json?FIELDS[TITLE]={self.title}&FIELDS[NAME]={self.name}&FIELDS[LAST_NAME]={self.last_name}&FIELDS[EMAIL][0][VALUE]={self.email}&FIELDS[EMAIL][0][VALUE_TYPE]=WORK&FIELDS[PHONE][0][VALUE]={self.phone}&FIELDS[PHONE][0][VALUE_TYPE]=WORK&FIELDS[OPPORTUNITY]={self.price}&FIELDS[COMMENTS]={self.cart}"
+            url = f"https://b24-ow3s7g.bitrix24.ru/rest/1/w6nffiph0rbxh7i3/crm.lead.add.json?FIELDS[TITLE]={self.title}&FIELDS[NAME]={self.name}&FIELDS[LAST_NAME]={self.last_name}&FIELDS[EMAIL][0][VALUE]={self.email}&FIELDS[EMAIL][0][VALUE_TYPE]=WORK&FIELDS[PHONE][0][VALUE]={self.phone}&FIELDS[PHONE][0][VALUE_TYPE]=WORK&FIELDS[OPPORTUNITY]={self.price}&FIELDS[COMMENTS]={self.cart}"
             request_data = requests.get(url)
             if request_data.status_code == 200 or request_data.status_code == "200":
                 return {"status" : True}
@@ -541,6 +541,7 @@ class DeleteNonUniqueNamesView(View):
         return HttpResponse("Non-unique names deleted successfully!")
 
 class DeleteAllCategoriesAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
     def delete(self, request, format=None):
         category.objects.all().delete()
         return Response({"message": "All categories have been deleted successfully."}, status=204)
