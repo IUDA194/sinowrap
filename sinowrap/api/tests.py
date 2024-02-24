@@ -1,5 +1,12 @@
-data = [{"color_id":0,"product_id":8623,"product_name":"Ампель Глициния 悬挂式植物 5 соцветий \"Вистерия\" 60 см Пластик/Ткань","color_name":"Белый","photo_path":"e558c1ee-bfd9-11ee-8560-f4c88abe04c5.png","count":1,"opt_price":206.7,"total":"85.00"}]
+import ast
+
+data_str = '[{"color_id":0,"product_id":9365,"product_name":"Набор корзин Круг 编织篮 2 шт \\"Улей\\" D16 х 15 см полиджут","color_name":"Натуральный","photo_path":"8fb23777-af55-11ee-855a-f4c88abe04c8.png","count":1,"opt_price":500.5,"total":"46.00"},{"color_id":0,"product_id":8702,"product_name":"Букет Пионов 牡丹 7 бутонов \\"Садовые\\" 70 см 10/160 шт","color_name":"Ассорти цветов","photo_path":"5f9ddf29-91c1-11ee-b0a5-ac7deb7f3205.png","count":2,"opt_price":175.5,"total":"1120.00"}]'
+
+data = ast.literal_eval(data_str)
 
 
+order_details = ""
+for item in data:
+    order_details = order_details + f"{item['product_name']}: {item['count']} шт."
 
 print(order_details)
