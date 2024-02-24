@@ -4,9 +4,14 @@ data_str = '[{"color_id":0,"product_id":9365,"product_name":"Набор корз
 
 data = ast.literal_eval(data_str)
 
-
 order_details = ""
+total_order_amount = 0  # Variable to store the total order amount
+
+
+
 for item in data:
-    order_details = order_details + f"{item['product_name']}: {item['count']} шт."
+    order_details = order_details + f"{item['product_name']}: {item['count']} шт.\n"
+    total_order_amount += float(item['total'].replace(',', ''))  # Sum up the total values
 
 print(order_details)
+print(f"Total Order Amount: {total_order_amount} руб.")
