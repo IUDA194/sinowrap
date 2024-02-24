@@ -156,9 +156,10 @@ class help_method:
                     self.price = price
 
         def send(self) -> dict:
-            order_details = []
+            order_details = ""
             for item in self.cart:
-                order_details.append(f"{item['product_name']}: {item['count']} шт.")
+                print(item)
+                order_details = order_details + f"{item['product_name']}: {item['count']} шт."
             url = f"https://b24-ow3s7g.bitrix24.ru/rest/1/w6nffiph0rbxh7i3/crm.lead.add.json?FIELDS[TITLE]={self.title}&FIELDS[NAME]={self.name}&FIELDS[LAST_NAME]={self.last_name}&FIELDS[EMAIL][0][VALUE]={self.email}&FIELDS[EMAIL][0][VALUE_TYPE]=WORK&FIELDS[PHONE][0][VALUE]={self.phone}&FIELDS[PHONE][0][VALUE_TYPE]=WORK&FIELDS[OPPORTUNITY]={self.price}&FIELDS[COMMENTS]={order_details}"
             request_data = requests.get(url)
             if request_data.status_code == 200 or request_data.status_code == "200":
