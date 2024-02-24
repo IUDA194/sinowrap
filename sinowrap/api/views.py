@@ -162,6 +162,7 @@ class help_method:
             total_order_amount = 0
             for item in data:
                 order_details = order_details + f"{item['product_name']} Цвет {item['color_name']}: {item['count']} шт. \n"
+                print(float(item['total']))
                 total_order_amount += float(item['total'])
             url = f"https://b24-ow3s7g.bitrix24.ru/rest/1/w6nffiph0rbxh7i3/crm.lead.add.json?FIELDS[TITLE]={self.title}&FIELDS[NAME]={self.name}&FIELDS[LAST_NAME]={self.last_name}&FIELDS[EMAIL][0][VALUE]={self.email}&FIELDS[EMAIL][0][VALUE_TYPE]=WORK&FIELDS[PHONE][0][VALUE]={self.phone}&FIELDS[PHONE][0][VALUE_TYPE]=WORK&FIELDS[OPPORTUNITY]={total_order_amount}&FIELDS[COMMENTS]={order_details}"
             request_data = requests.get(url)
