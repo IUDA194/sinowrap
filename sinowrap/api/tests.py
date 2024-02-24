@@ -11,7 +11,6 @@ total_order_amount = 0  # Variable to store the total order amount
 
 for item in data:
     order_details = order_details + f"{item['product_name']}: {item['count']} шт.\n"
-    total_order_amount += float(item['total'].replace(',', ''))  # Sum up the total values
+    total_order_amount += float(item['opt_price'] + item['count'])  # Sum up the total values
 
-print(order_details)
-print(f"Total Order Amount: {total_order_amount} руб.")
+print(total_order_amount)
