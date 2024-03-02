@@ -171,7 +171,7 @@ class help_method:
             for item in data:
                 order_details = order_details + f"{item['product_name']} Цвет {item['color_name']}: {item['count']} шт. \n"
                 total_order_amount += float(item['opt_price'] + item['count'])
-            url = f"https://b24-ow3s7g.bitrix24.ru/rest/1/sd72umz9rzdjz3g3/crm.lead.add.json?FIELDS[TITLE]={self.title}&FIELDS[NAME]={self.name}&FIELDS[LAST_NAME]={self.last_name}&FIELDS[EMAIL][0][VALUE]={self.email}&FIELDS[EMAIL][0][VALUE_TYPE]=WORK&FIELDS[PHONE][0][VALUE]={self.phone}&FIELDS[PHONE][0][VALUE_TYPE]=WORK&FIELDS[OPPORTUNITY]={total_order_amount}&FIELDS[COMMENTS]={order_details}"
+            url = f"https://b24-ow3s7g.bitrix24.ru/rest/1/1apddcqfh3oss5h5/crm.lead.add.json?FIELDS[TITLE]={self.title}&FIELDS[NAME]={self.name}&FIELDS[LAST_NAME]={self.last_name}&FIELDS[EMAIL][0][VALUE]={self.email}&FIELDS[EMAIL][0][VALUE_TYPE]=WORK&FIELDS[PHONE][0][VALUE]={self.phone}&FIELDS[PHONE][0][VALUE_TYPE]=WORK&FIELDS[OPPORTUNITY]={total_order_amount}&FIELDS[COMMENTS]={order_details}"
             request_data = requests.get(url)
             print(request_data.text)
             if request_data.status_code == 200 or request_data.status_code == "200":
