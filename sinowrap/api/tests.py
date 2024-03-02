@@ -1,8 +1,18 @@
 import ast
+import json
 
-data_str = '[{"color_id":0,"product_id":9365,"product_name":"Набор корзин Круг 编织篮 2 шт \\"Улей\\" D16 х 15 см полиджут","color_name":"Натуральный","photo_path":"8fb23777-af55-11ee-855a-f4c88abe04c8.png","count":1,"opt_price":500.5,"total":"46.00"},{"color_id":0,"product_id":8702,"product_name":"Букет Пионов 牡丹 7 бутонов \\"Садовые\\" 70 см 10/160 шт","color_name":"Ассорти цветов","photo_path":"5f9ddf29-91c1-11ee-b0a5-ac7deb7f3205.png","count":2,"opt_price":175.5,"total":"1120.00"}]'
+data_str = '[{"color_id":0,"product_id":16947,"product_name":"Ветка Оливы 绿化 6 соцветий "Агрелия" 95 см Пластик/Ткань","color_name":"Зелёный","photo_path":"71ccd860-addc-11ee-b0b2-9c6b0010f581.png","count":3,"opt_price":107.9,"total":"68.00"}]'
 
-data = ast.literal_eval(data_str)
+def formatttt_string_to_list(data : str):
+    p_n = data.find("product_name")
+    c_n = data.find('","color_name"')
+    new_part = data[p_n+15:c_n].replace('"', '')
+    datta = data.replace(data[p_n+15:c_n], new_part)
+    return datta
+
+
+data = ast.literal_eval(formatttt_string_to_list(data_str))
+
 
 order_details = ""
 total_order_amount = 0  # Variable to store the total order amount

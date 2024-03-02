@@ -156,9 +156,17 @@ class help_method:
                     self.cart = cart
                     self.price = price
 
+        def formatttt_string_to_list(self, data : str):
+            p_n = data.find("product_name")
+            c_n = data.find('","color_name"')
+            new_part = data[p_n+15:c_n].replace('"', '')
+            datta = data.replace(data[p_n+15:c_n], new_part)
+            return datta
+
+
         def send(self) -> dict:
             order_details = ""
-            data = ast.literal_eval(self.cart)
+            data = ast.literal_eval(self.formatttt_string_to_list(self.cart))
             total_order_amount = 0
             for item in data:
                 order_details = order_details + f"{item['product_name']} Цвет {item['color_name']}: {item['count']} шт. \n"
@@ -553,3 +561,4 @@ class DeleteAllCategoriesAPIView(APIView):
     def delete(self, request, format=None):
         category.objects.all().delete()
         return Response({"message": "All categories have been deleted successfully."}, status=204)
+    
