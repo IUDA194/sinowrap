@@ -184,6 +184,7 @@ class help_method:
             for i in range(len(p_n)):
                 new_part = data[p_n[i]+15:c_n[i]].replace('"', '')
                 datta = datta.replace(data[p_n[i]+15:c_n[i]], new_part)
+            datta = datta.replace('\\', "")
             return datta
 
 
